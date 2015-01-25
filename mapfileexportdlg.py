@@ -25,14 +25,20 @@ from PyQt4.QtGui import *
 
 from qgis.core import *
 from qgis.gui import *
+from PyQt4 import QtGui
 
-from .ui.mapfileexportdlg_ui import Ui_MapfileExportDlg
+from .ui.interface import Ui_MapfileExportDlg
 import mapscript
 import re
 
 _toUtf8 = lambda s: unicode(s).encode('utf8')
 
 
+defaultEnableRequest = "*"
+defaultTitle = "QGIS-MAP"
+defaultOnlineResource = "http://localhost/cgi-bin/mapserv"
+srsList = []
+    
 class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
 
     unitMap = {
@@ -51,6 +57,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         False : mapscript.MS_FALSE
     }
 
+    
     @classmethod
     def getLayerType(self, layer):
         if layer.type() == QgsMapLayer.RasterLayer:
@@ -94,31 +101,93 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
 
         # hide map unit combo and label
         self.label4.hide()
-        self.cmbMapUnits.hide()
+        self.cmbGeneralMapUnits.hide()
+        srsList.append( _toUtf8( self.canvas.mapRenderer().destinationCrs().authid() ) )
 
         # setup the template table
         m = TemplateModel(self)
         for layer in self.legend.layers():
             m.append( layer )
+            
         self.templateTable.setModel(m)
         d = TemplateDelegate(self)
         self.templateTable.setItemDelegate(d)
-
+        
         # get the default title from the project
         title = QgsProject.instance().title()
         if title == "":
             title = QFileInfo( QgsProject.instance().fileName() ).completeBaseName()
         if title != "":
-            self.txtMapName.setText( title )
+            self.txtGeneralMapName.setText( title )
 
         # fill the image format combo
-        self.cmbMapImageType.addItems( ["png", "gif", "jpeg", "svg", "GTiff"] )
+        self.cmbGeneralMapImageType.addItems( ["png", "gif", "jpeg", "svg", "GTiff"] )
 
         QObject.connect( self.btnChooseFile, SIGNAL("clicked()"), self.selectMapFile )
         QObject.connect( self.btnChooseTemplate, SIGNAL("clicked()"), self.selectTemplateBody )
         QObject.connect( self.btnChooseTmplHeader, SIGNAL("clicked()"), self.selectTemplateHeader )
         QObject.connect( self.btnChooseTmplFooter, SIGNAL("clicked()"), self.selectTemplateFooter )
+        
+        self.groupBoxMetadataOws.setEnabled(False)
+        self.groupBoxMetadataWms.setEnabled(False)
+        self.groupBoxMetadataWfs.setEnabled(False)
+        self.groupBoxMetadataWcs.setEnabled(False)
+        self.checkBoxOws.stateChanged.connect(self.toggleOwsMetadata)
+        self.checkBoxWms.stateChanged.connect(self.toggleWmsMetadata)
+        self.checkBoxWfs.stateChanged.connect(self.toggleWfsMetadata)
+        self.checkBoxWcs.stateChanged.connect(self.toggleWcsMetadata)
+        
 
+    def toggleOwsMetadata(self):
+        if self.checkBoxOws.isChecked():
+            self.groupBoxMetadataOws.setEnabled(True)
+            self.txtMetadataOwsOwsEnableRequest.setText(defaultEnableRequest)
+            self.txtMetadataOwsOwsTitle.setText(defaultTitle)
+            self.txtMetadataOwsOwsOnlineResource.setText(defaultOnlineResource)
+            self.txtMetadataOwsOwsSrs.setText(' '.join(srsList))
+        else:
+            self.txtMetadataOwsOwsEnableRequest.setText("")
+            self.txtMetadataOwsOwsTitle.setText("")
+            self.txtMetadataOwsOwsOnlineResource.setText("")
+            self.txtMetadataOwsOwsSrs.setText("")
+            self.groupBoxMetadataOws.setEnabled(False)
+            
+    def toggleWmsMetadata(self):
+        if self.checkBoxWms.isChecked():
+            self.groupBoxMetadataWms.setEnabled(True)
+            self.txtMetadataWmsWebWmsEnableRequest.setText(defaultEnableRequest)
+            self.txtMetadataWmsWebWmsTitle.setText(defaultTitle)
+            self.txtMetadataWmsWebWmsOnlineresource.setText(defaultOnlineResource)
+            self.txtMetadataWmsWebWmsSrs.setText(' '.join(srsList))
+        else:
+            self.txtMetadataWmsWebWmsEnableRequest.setText("")
+            self.txtMetadataWmsWebWmsTitle.setText("")
+            self.txtMetadataWmsWebWmsOnlineresource.setText("")
+            self.txtMetadataWmsWebWmsSrs.setText("")
+            self.groupBoxMetadataWms.setEnabled(False)
+        
+    def toggleWfsMetadata(self):
+        if self.checkBoxWfs.isChecked():
+            self.groupBoxMetadataWfs.setEnabled(True)
+            self.txtMetadataWfsWebWfsEnableRequest.setText(defaultEnableRequest)
+            self.txtMetadataWfsWebWfsTitle.setText(defaultTitle)
+            self.txtMetadataWfsWebWfsOnlineresource.setText(defaultOnlineResource)
+            self.txtMetadataWfsWebWfsSrs.setText(' '.join(srsList))
+        else:
+            self.txtMetadataWfsWebWfsEnableRequest.setText("")
+            self.txtMetadataWfsWebWfsTitle.setText("")
+            self.txtMetadataWfsWebWfsOnlineresource.setText("")
+            self.txtMetadataWfsWebWfsSrs.setText("")
+            self.groupBoxMetadataWfs.setEnabled(False)
+            
+    def toggleWcsMetadata(self):
+        if self.checkBoxWcs.isChecked():
+            self.groupBoxMetadataWcs.setEnabled(True)
+            self.txtMetadataWcsWebWcsEnableRequest.setText(defaultEnableRequest)
+        else:
+            self.txtMetadataWcsWebWcsEnableRequest.setText("")
+            self.groupBoxMetadataWcs.setEnabled(False)
+            
     def selectMapFile(self):
         # retrieve the last used map file path
         settings = QSettings()
@@ -167,18 +236,18 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
 
         # create a new ms_map
         ms_map = mapscript.mapObj()
-        ms_map.name = _toUtf8( self.txtMapName.text() )
+        ms_map.name = _toUtf8( self.txtGeneralMapName.text() )
 
         # map size
-        width, height = int(self.txtMapWidth.text()), int(self.txtMapHeight.text())
+        width, height = int(self.txtGeneralMapWidth.text()), int(self.txtGeneralMapHeight.text())
         widthOk, heightOk = isinstance(width, int), isinstance(height, int)
         if widthOk and heightOk:
             ms_map.setSize( width, height )
 
         # map units
         ms_map.units = self.unitMap[ self.canvas.mapUnits() ]
-        if self.cmbMapUnits.currentIndex() >= 0:
-            units, ok = self.cmbMapUnits.itemData( self.cmbMapUnits.currentIndex() )
+        if self.cmbGeneralMapUnits.currentIndex() >= 0:
+            units, ok = self.cmbGeneralMapUnits.itemData( self.cmbGeneralMapUnits.currentIndex() )
             if ok:
                 ms_map.units = units
 
@@ -189,14 +258,21 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         ms_map.extent.maxx = extent.xMaximum()
         ms_map.extent.maxy = extent.yMaximum()
         ms_map.setProjection( _toUtf8( self.canvas.mapRenderer().destinationCrs().toProj4() ) )
+        
+        if self.txtGeneralMapProjLibFolder.text().strip(' \t\n\r') != "":
+            ms_map.setConfigOption("PROJ_LIB", self.txtGeneralMapProjLibFolder.text().strip(' \t\n\r'))
+        if self.txtMetadataMapMsErrorFilePath.text().strip(' \t\n\r') != "":
+            ms_map.setConfigOption("MS_ERRORFILE", self.txtMetadataMapMsErrorFilePath.text().strip(' \t\n\r'))
+        if self.txtMetadataMapDebugLevel.text().strip(' \t\n\r') != "":
+            ms_map.setConfigOption("MS_DEBUGLEVEL", self.txtMetadataMapDebugLevel.text().strip(' \t\n\r'))
 
-        if self.txtMapShapePath.text() != "":
-            ms_map.shapepath = _toUtf8( self.getMapShapePath() )
+#         if self.txtGeneralMapShapePath.text() != "":
+#             ms_map.shapepath = _toUtf8( self.txtGeneralMapShapePath.text() )
 
         # image section
         r,g,b,a = self.canvas.canvasColor().getRgb()
         ms_map.imagecolor.setRGB( r, g, b )    #255,255,255
-        ms_map.setImageType( _toUtf8( self.cmbMapImageType.currentText() ) )
+        ms_map.setImageType( _toUtf8( self.cmbGeneralMapImageType.currentText() ) )
         ms_outformat = ms_map.getOutputFormatByName( ms_map.imagetype )
         ms_outformat.transparent = self.onOffMap[ True ]
 
@@ -214,28 +290,166 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         #ms_map.legend.template = "[templatepath]"
 
         # web section
-        ms_map.web.imagepath = _toUtf8( self.getWebImagePath() )
-        ms_map.web.imageurl = _toUtf8( self.getWebImageUrl() )
-        ms_map.web.temppath = _toUtf8( self.getWebTemporaryPath() )
+        ms_map.web.imagepath = _toUtf8( self.txtGeneralWebImagePath.text() )
+        ms_map.web.imageurl = _toUtf8( self.txtGeneralWebImageUrl.text() )
+        if self.txtGeneralWebTempPath.text() != "":
+            ms_map.web.temppath = _toUtf8( self.txtGeneralWebTempPath.text() )
         # add validation block if set a regexp
         # no control on regexp => it will be done by mapscript applySld
         # generating error in case regexp is wrong
-        validationRegexp = _toUtf8( self.getExternalGraphicRegexp() )
+        validationRegexp = _toUtf8( self.txtGeneralExternalGraphicRegexp.text() )
         if validationRegexp != "":
             ms_map.web.validation.set("sld_external_graphic", validationRegexp)
 
         # web template
         ms_map.web.template = _toUtf8( self.getTemplatePath() )
-        ms_map.web.header = _toUtf8( self.getTemplateHeaderPath() )
-        ms_map.web.footer = _toUtf8( self.getTemplateFooterPath() )
+        
+        if self.txtTmplHeaderPath.text() != "":
+            ms_map.web.header = _toUtf8( self.txtTmplHeaderPath.text() )
+            
+        if self.txtTmplFooterPath.text() != "":
+            ms_map.web.footer = _toUtf8( self.txtTmplFooterPath.text() )
 
-        # map metadata
-        ms_map.setMetaData( "ows_title", ms_map.name )
-        ms_map.setMetaData( "ows_onlineresource", _toUtf8( u"%s?map=%s" % (self.txtMapServerUrl.text(), self.txtMapFilePath.text()) ) )
+        # OWS metadata
+        if self.txtMetadataOwsOwsTitle.text() != "":
+            ms_map.setMetaData( "ows_title", self.txtMetadataOwsOwsTitle.text() )
+             
+        if self.txtMetadataOwsOwsOnlineResource.text() != "":
+            ms_map.setMetaData( "ows_onlineresource", _toUtf8( u"%s?map=%s" % (self.txtMetadataOwsOwsOnlineResource.text(), self.txtMapFilePath.text()) ) )
+            
         srsList = []
         srsList.append( _toUtf8( self.canvas.mapRenderer().destinationCrs().authid() ) )
-        ms_map.setMetaData( "ows_srs", ' '.join(srsList) )
-        ms_map.setMetaData( "ows_enable_request", "*" )
+        if self.txtMetadataOwsOwsSrs.text() != "":
+            ms_map.setMetaData( "ows_srs", self.txtMetadataOwsOwsSrs.text())
+            
+        if self.txtMetadataOwsOwsEnableRequest.text() != "":
+            ms_map.setMetaData( "ows_enable_request", self.txtMetadataOwsOwsEnableRequest.text() )
+        if self.txtMetadataWmsWebWmsEnableRequest.text() != "":
+            ms_map.setMetaData( "wms_enable_request", self.txtMetadataWmsWebWmsEnableRequest.text() )
+        if self.txtMetadataWfsWebWfsEnableRequest.text() != "":
+            ms_map.setMetaData( "wfs_enable_request", self.txtMetadataWfsWebWfsEnableRequest.text() )
+        if self.txtMetadataWcsWebWcsEnableRequest.text() != "":
+            ms_map.setMetaData( "wcs_enable_request", self.txtMetadataWcsWebWcsEnableRequest.text() )
+#             if self.txtMetadataWmsWebWmsEnableRequest.text() == "" and self.txtMetadataWfsWebWfsEnableRequest.text() == "" and self.txtMetadataWcsWebWcsEnableRequest.text() == "":
+#                 ms_map.setMetaData( "ows_enable_request", "*" )
+                
+        if self.txtMetadataOwsWebOwsAllowedIpList.text() != "":
+            ms_map.setMetaData( "ows_allowed_ip_list", self.txtMetadataOwsWebOwsAllowedIpList.text())
+        if self.txtMetadataOwsWebOwsDeniedIpList.text() != "":
+            ms_map.setMetaData( "ows_denied_ip_list", self.txtMetadataOwsWebOwsDeniedIpList.text())
+        if self.txtMetadataOwsWebOwsSchemasLocation.text() != "":
+            ms_map.setMetaData( "ows_schemas_location", self.txtMetadataOwsWebOwsSchemasLocation.text())
+        if self.txtMetadataOwsWebOwsUpdatesequence.text() != "":
+            ms_map.setMetaData( "ows_updatesequence", self.txtMetadataOwsWebOwsUpdatesequence.text())
+        if self.txtMetadataOwsWebOwsHttpMaxAge.text() != "":
+            ms_map.setMetaData( "ows_http_max_age", self.txtMetadataOwsWebOwsHttpMaxAge.text())
+        if self.txtMetadataOwsWebOwsSldEnabled.text() != "":
+            ms_map.setMetaData( "ows_sld_enabled", self.txtMetadataOwsWebOwsSldEnabled.text())
+        
+        # WMS metadata
+        if self.txtMetadataWmsWebWmsTitle.text() != "":
+            ms_map.setMetaData( "wms_title", self.txtMetadataWmsWebWmsTitle.text())
+        if self.txtMetadataWmsWebWmsOnlineresource.text() != "":
+            ms_map.setMetaData( "wms_onlineresource", _toUtf8( u"%s?map=%s" % (self.txtMetadataWmsWebWmsOnlineresource.text(), self.txtMapFilePath.text())))
+        if self.txtMetadataWmsWebWmsSrs.text() != "":
+            ms_map.setMetaData( "wms_srs", self.txtMetadataWmsWebWmsSrs.text())
+        if self.txtMetadataWmsWebWmsAttrbutionOnlineresource.text() != "":
+            ms_map.setMetaData( "wms_attribution_onlineresource", self.txtMetadataWmsWebWmsAttrbutionOnlineresource.text())
+        if self.txtMetadataWmsWebWmsAttributionTitle.text() != "":
+            ms_map.setMetaData( "wms_attribution_title", self.txtMetadataWmsWebWmsAttributionTitle.text())
+        if self.txtMetadataWmsWebWmsBboxExtended.text() != "":
+            ms_map.setMetaData( "wms_bbox_extended", self.txtMetadataWmsWebWmsBboxExtended.text())
+        if self.txtMetadataWmsWebWmsFeatureInfoMimeType.text() != "":
+            ms_map.setMetaData( "wms_feature_info_mime_type", self.txtMetadataWmsWebWmsFeatureInfoMimeType.text())
+        if self.txtMetadataWmsWebWmsEncoding.text() != "":
+            ms_map.setMetaData( "wms_encoding", self.txtMetadataWmsWebWmsEncoding.text())
+        if self.txtMetadataWmsWebWmsGetcapabilitiesVersion.text() != "":
+            ms_map.setMetaData( "wms_getcapabilities_version", self.txtMetadataWmsWebWmsGetcapabilitiesVersion.text())
+        if self.txtMetadataWmsWebWmsFees.text() != "":
+            ms_map.setMetaData( "wms_fees", self.txtMetadataWmsWebWmsTitle.text())
+        if self.txtMetadataWmsWebWmsGetmapFormallist.text() != "":
+            ms_map.setMetaData( "wms_getmap_formatlist", self.txtMetadataWmsWebWmsGetmapFormallist.text())
+        if self.txtMetadataWmsWebWmsGetlegendgraphicFormailist.text() != "":
+            ms_map.setMetaData( "wms_getlegendgraphic_formatlist", self.txtMetadataWmsWebWmsGetlegendgraphicFormailist.text())
+        if self.txtMetadataWmsWebWmsKeywordlistVocabulary.text() != "":
+            ms_map.setMetaData( "wms_keywordlist_vocabulary", self.txtMetadataWmsWebWmsKeywordlistVocabulary.text())
+        if self.txtMetadataWmsWebWmsKeywordlist.text() != "":
+            ms_map.setMetaData( "wms_keywordlist", self.txtMetadataWmsWebWmsKeywordlist.text())
+        if self.txtMetadataWmsWebWmsLanguages.text() != "":
+            ms_map.setMetaData( "wms_languages", self.txtMetadataWmsWebWmsLanguages.text())
+        if self.txtMetadataWmsWebWmsLayerlimit.text() != "":
+            ms_map.setMetaData( "wms_layerlimit", self.txtMetadataWmsWebWmsLayerlimit.text())
+        if self.txtMetadataWmsWebWmsRootlayerKeywordlist.text() != "":
+            ms_map.setMetaData( "wms_rootlayer_keywordlist", self.txtMetadataWmsWebWmsRootlayerKeywordlist.text())
+        if self.txtMetadataWmsWebWmsRemoteSldMaxBytes.text() != "":
+            ms_map.setMetaData( "wms_remote_sld_max_bytes", self.txtMetadataWmsWebWmsRemoteSldMaxBytes.text())
+        if self.txtMetadataWmsWebWmsServiceOnlineResource.text() != "":
+            ms_map.setMetaData( "wms_service_onlineresource", self.txtMetadataWmsWebWmsServiceOnlineResource.text())
+        if self.txtMetadataWmsWebWmsResx.text() != "":
+            ms_map.setMetaData( "wms_resx", self.txtMetadataWmsWebWmsResx.text())
+        if self.txtMetadataWmsWebWmsResy.text() != "":
+            ms_map.setMetaData( "wms_resy", self.txtMetadataWmsWebWmsResy.text())
+        if self.txtMetadataWmsWebWmsRootlayerAbstract.text() != "":
+            ms_map.setMetaData( "wms_rootlayer_abstract", self.txtMetadataWmsWebWmsRootlayerAbstract.text())
+        if self.txtMetadataWmsWebWmsRootlayerTitle.text() != "":
+            ms_map.setMetaData( "wms_rootlayer_title", self.txtMetadataWmsWebWmsRootlayerTitle.text())    
+        if self.txtMetadataWmsWebWmsTimeformat.text() != "":
+            ms_map.setMetaData( "wms_timeformat", self.txtMetadataWmsWebWmsTimeformat.text())
+            
+        # WFS metadata
+        if self.txtMetadataWfsWebWfsTitle.text() != "":
+            ms_map.setMetaData( "wfs_title", self.txtMetadataWfsWebWfsTitle.text())
+        if self.txtMetadataWfsWebWfsOnlineresource.text() != "":
+            ms_map.setMetaData( "wfs_onlineresource", _toUtf8( u"%s?map=%s" % (self.txtMetadataWfsWebWfsOnlineresource.text(), self.txtMapFilePath.text())))
+        if self.txtMetadataWfsWebWfsSrs.text() != "":
+            ms_map.setMetaData( "wfs_srs", self.txtMetadataWfsWebWfsSrs.text())
+        if self.txtMetadataWfsWebWfsAbstract.text() != "":
+            ms_map.setMetaData( "wfs_abstract", self.txtMetadataWfsWebWfsAbstract.text())
+        if self.txtMetadataWfsWebWfsAccessconstraints.text() != "":
+            ms_map.setMetaData( "wfs_accessconstraints", self.txtMetadataWfsWebWfsAccessconstraints.text())
+        if self.txtMetadataWfsWebWfsEncoding.text() != "":
+            ms_map.setMetaData( "wfs_encoding", self.txtMetadataWfsWebWfsEncoding.text())
+        if self.txtMetadataWfsWebWfsFeatureCollection.text() != "":
+            ms_map.setMetaData( "wfs_feature_collection", self.txtMetadataWfsWebWfsFeatureCollection.text())
+        if self.txtMetadataWfsWebWfsFees.text() != "":
+            ms_map.setMetaData( "wfs_fees", self.txtMetadataWfsWebWfsFees.text())
+        if self.txtMetadataWfsWebWfsKeywordlist.text() != "":
+            ms_map.setMetaData( "wfs_keywordlist", self.txtMetadataWfsWebWfsKeywordlist.text())
+        if self.txtMetadataWfsWebWfsGetcapabilitiesVersion.text() != "":
+            ms_map.setMetaData( "wfs_getcapabilities_version", self.txtMetadataWfsWebWfsGetcapabilitiesVersion.text())
+        if self.txtMetadataWfsWebWfsNamespacePrefix.text() != "":
+            ms_map.setMetaData( "wfs_namespace_prefix", self.txtMetadataWfsWebWfsNamespacePrefix.text())
+        if self.txtMetadataWfsWebWfsMaxfeatures.text() != "":
+            ms_map.setMetaData( "wfs_maxfeatures", self.txtMetadataWfsWebWfsMaxfeatures.text())
+        if self.txtMetadataWfsWebWfsServiceOnlineresource.text() != "":
+            ms_map.setMetaData( "wfs_service_onlineresource", self.txtMetadataWfsWebWfsServiceOnlineresource.text())
+        if self.txtMetadataWfsWebWfsNamespaceUri.text() != "":
+            ms_map.setMetaData( "wfs_namespace_uri", self.txtMetadataWfsWebWfsNamespaceUri.text())
+            
+        # WCS metadata
+        if self.txtMetadataWcsWebWcsLabel.text() != "":
+            ms_map.setMetaData( "wcs_label", self.txtMetadataWcsWebWcsLabel.text())
+        if self.txtMetadataWcsWebWcsAbstract.text() != "":
+            ms_map.setMetaData( "wcs_abstract", self.txtMetadataWcsWebWcsAbstract.text())
+        if self.txtMetadataWcsWebWcsAccessconstraints.text() != "":
+            ms_map.setMetaData( "wcs_accessconstraints", self.txtMetadataWcsWebWcsAccessconstraints.text())
+        if self.txtMetadataWcsWebWcsDescription.text() != "":
+            ms_map.setMetaData( "wcs_description", self.txtMetadataWcsWebWcsDescription.text())
+        if self.txtMetadataWcsWebWcsKeywords.text() != "":
+            ms_map.setMetaData( "wcs_keywords", self.txtMetadataWcsWebWcsKeywords.text())
+        if self.txtMetadataWcsWebWcsFees.text() != "":
+            ms_map.setMetaData( "wcs_fees", self.txtMetadataWcsWebWcsFees.text())
+        if self.txtMetadataWcsWebWcsMetadatalinkFormat.text() != "":
+            ms_map.setMetaData( "wcs_metadatalink_format", self.txtMetadataWcsWebWcsMetadatalinkFormat.text())
+        if self.txtMetadataWcsWebWcsMetadatalinkHref.text() != "":
+            ms_map.setMetaData( "wcs_metadatalink_href", self.txtMetadataWcsWebWcsMetadatalinkHref.text())
+        if self.txtMetadataWcsWebWcsMetadatalinkType.text() != "":
+            ms_map.setMetaData( "wcs_metadatalink_type", self.txtMetadataWcsWebWcsMetadatalinkType.text())
+        if self.txtMetadataWcsWebWcsName.text() != "":
+            ms_map.setMetaData( "wcs_name", self.txtMetadataWcsWebWcsName.text())
+        if self.txtMetadataWcsWebWcsServiceOnlineresource.text() != "":
+            ms_map.setMetaData( "wcs_service_onlineresource", self.txtMetadataWcsWebWcsServiceOnlineresource.text())
+            
 
         for layer in self.legend.layers():
             # check if layer is a supported type... seems return None if type is not supported (e.g. csv)
@@ -248,6 +462,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             ms_layer.name = _toUtf8( layer.name() )
             ms_layer.type = self.getLayerType( layer )
             ms_layer.status = self.onOffMap[ self.legend.isLayerVisible( layer ) ]
+            ms_layer.dump = self.onOffMap[ True ]
 
             # layer extent
             extent = layer.extent()
@@ -255,6 +470,9 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             ms_layer.extent.miny = extent.yMinimum()
             ms_layer.extent.maxx = extent.xMaximum()
             ms_layer.extent.maxy = extent.yMaximum()
+            
+            if self.txtMetadataOwsOwsEnableRequest.text() != "" or self.txtMetadataWfsWebWfsEnableRequest.text() != "":
+                ms_layer.template = "dummy"
 
             ms_layer.setProjection( _toUtf8( layer.crs().toProj4() ) )
 
@@ -262,7 +480,47 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
                 ms_layer.minscaledenom = layer.minimumScale()
                 ms_layer.maxscaledenom = layer.maximumScale()
 
-            ms_layer.setMetaData( "ows_title", ms_layer.name )
+            # metadata from metadata config of each layer
+            if self.checkBoxOws.isChecked():
+                ms_layer.setMetaData( "ows_title", ms_layer.name )
+            if self.checkBoxWms.isChecked():
+                ms_layer.setMetaData( "wms_title", ms_layer.name )
+            if self.checkBoxWfs.isChecked():
+                ms_layer.setMetaData( "wfs_title", ms_layer.name )
+                
+            if layer.title() != "":
+                ms_layer.setMetaData("wms_title", layer.title())
+            if layer.abstract() != "":
+                ms_layer.setMetaData("wms_abstract", layer.abstract())
+            if layer.keywordList() != "":
+                ms_layer.setMetaData("wms_keywordlist", layer.keywordList())
+            if layer.dataUrl() != "":
+                ms_layer.setMetaData("wms_dataurl_href", layer.dataUrl())
+            if layer.dataUrlFormat() != "":
+                ms_layer.setMetaData("wms_dataurl_format", layer.dataUrlFormat())
+            if layer.attribution() != "":
+                ms_layer.setMetaData("wms_attribution_title", layer.attribution())
+            if layer.attributionUrl() != "":
+                ms_layer.setMetaData("wms_attribution_onlineresource", layer.attributionUrl())
+            if layer.metadataUrl() != "":
+                ms_layer.setMetaData("wms_metadataurl_href", layer.metadataUrl())
+            if layer.metadataUrlType() != "":
+                ms_layer.setMetaData("wms_metadataurl_type", layer.metadataUrlType())
+            if layer.metadataUrlFormat() != "":
+                ms_layer.setMetaData("wms_metadataurl_format", layer.metadataUrlFormat())
+            
+            if layer.legendUrl() != "" or layer.legendUrlFormat() != "":
+                layerLegenUrlStyle = ms_layer.name
+                ms_layer.setMetaData("wms_style", layerLegenUrlStyle)
+                if layer.legendUrl() != "":
+                    ms_layer.setMetaData("wms_style_%s_legendurl_href" % layerLegenUrlStyle, layer.legendUrl())
+                if layer.legendUrlFormat() != "":
+                    ms_layer.setMetaData("wms_style_%s_legendurl_format" % layerLegenUrlStyle, layer.legendUrlFormat())
+                if layer.legendUrl() != "":
+                    ms_layer.setMetaData("wms_style_%s_legendurl_height" % layerLegenUrlStyle, "16")
+                if layer.legendUrl() != "":
+                    ms_layer.setMetaData("wms_style_%s_legendurl_width" % layerLegenUrlStyle, "16")
+            
 
             # layer connection
             if layer.providerType() == 'postgres':
@@ -272,7 +530,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
                 data = u"%s FROM %s" % ( uri.geometryColumn(), uri.quotedTablename() )
                 if uri.keyColumn() != "":
                     data += u" USING UNIQUE %s" % uri.keyColumn()
-                data += u" USING UNIQUE %s" % layer.crs().postgisSrid()
+                data += u" USING srid=%s" % layer.crs().postgisSrid()
                 if uri.sql() != "":
                   data += " FILTER (%s)" % uri.sql()
                 ms_layer.data = _toUtf8( data )
@@ -507,7 +765,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
     <title>%s</title>
   </head>
   <body>
-''' % self.txtMapName.text()
+''' % self.txtGeneralMapName.text()
 
         for lid, orientation in self.templateTable.model().getObjectIter():
             layer = QgsMapLayerRegistry.instance().mapLayer( lid )
@@ -576,29 +834,6 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             with open( unicode(tmplPath), 'w' ) as fout:
                 fout.write( tmplContent )
             return tmplPath
-
-    def getTemplateHeaderPath(self):
-        return self.txtTmplHeaderPath.text()
-
-    def getTemplateFooterPath(self):
-        return self.txtTmplFooterPath.text()
-
-
-    def getMapShapePath(self):
-        return self.txtMapShapePath.text()
-
-
-    def getWebImagePath(self):
-        return self.txtWebImagePath.text() #"/tmp/"
-
-    def getWebImageUrl(self):
-        return self.txtWebImageUrl.text() #"/tmp/"
-
-    def getWebTemporaryPath(self):
-        return self.txtWebTempPath.text() #"/tmp/"
-
-    def getExternalGraphicRegexp(self):
-        return self.txtExternalGraphicRegexp.text()
 
 
 class TemplateDelegate(QItemDelegate):

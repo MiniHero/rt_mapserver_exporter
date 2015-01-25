@@ -617,8 +617,8 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-151</y>
-            <width>744</width>
+            <y>0</y>
+            <width>500</width>
             <height>700</height>
            </rect>
           </property>
