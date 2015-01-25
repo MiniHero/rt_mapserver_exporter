@@ -38,6 +38,7 @@ defaultEnableRequest = "*"
 defaultTitle = "QGIS-MAP"
 defaultOnlineResource = "http://localhost/cgi-bin/mapserv"
 srsList = []
+ms_map = mapscript.mapObj()
     
 class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
 
@@ -57,6 +58,17 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         False : mapscript.MS_FALSE
     }
 
+    imageTypeCmbMap = {
+        "png" : 0,
+        "gif" : 1,
+        "jpeg" : 2,
+        "svg" : 3,
+        "GTiff" : 4
+    }
+    
+    PROJ_LIB = "PROJ_LIB"
+    MS_ERRORFILE = "MS_ERRORFILE"
+    MS_DEBUGLEVEL = "MS_DEBUGLEVEL"
     
     @classmethod
     def getLayerType(self, layer):
@@ -124,6 +136,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         self.cmbGeneralMapImageType.addItems( ["png", "gif", "jpeg", "svg", "GTiff"] )
 
         QObject.connect( self.btnChooseFile, SIGNAL("clicked()"), self.selectMapFile )
+        QObject.connect( self.toolButtonImportMapFile, SIGNAL("clicked()"), self.importFromMapfile )
         QObject.connect( self.btnChooseTemplate, SIGNAL("clicked()"), self.selectTemplateBody )
         QObject.connect( self.btnChooseTmplHeader, SIGNAL("clicked()"), self.selectTemplateHeader )
         QObject.connect( self.btnChooseTmplFooter, SIGNAL("clicked()"), self.selectTemplateFooter )
@@ -202,6 +215,106 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         settings.setValue("/rt_mapserver_exporter/lastUsedFile", filename)
         # update the displayd path
         self.txtMapFilePath.setText( filename )
+        
+    def importFromMapfile(self):
+        # retrieve the last used map file path
+        settings = QSettings()
+        lastUsedFile = settings.value("/rt_mapserver_exporter/lastUsedFile", "", type=str)
+
+        # ask for choosing where to store the map file
+        filename = QFileDialog.getSaveFileName(self, "Select where to save the map file", lastUsedFile, "MapFile (*.map)")
+        if filename == "":
+            return
+
+        # store the last used map file path
+        settings.setValue("/rt_mapserver_exporter/lastUsedFile", filename)
+        # update the displayd path
+        self.txtMapFilePath.setText( filename )
+        ms_map = mapscript.mapObj(filename)
+        
+        self.txtGeneralMapName.setText(ms_map.name)
+        self.cmbGeneralMapImageType.setCurrentIndex(self.imageTypeCmbMap.get(ms_map.imagetype))
+        self.txtGeneralMapWidth.setText(str(ms_map.get_width()))
+        self.txtGeneralMapHeight.setText(str(ms_map.get_height()))
+        self.txtGeneralMapProjLibFolder.setText(ms_map.getConfigOption(self.PROJ_LIB))
+        self.txtMetadataMapMsErrorFilePath.setText(ms_map.getConfigOption(self.MS_ERRORFILE))
+        self.txtMetadataMapDebugLevel.setText(ms_map.getConfigOption(self.MS_DEBUGLEVEL))
+        self.txtGeneralWebServerUrl.setText(ms_map.web.metadata.get("ows_onlineresource").split('?')[0])
+        self.txtGeneralWebImagePath.setText(ms_map.web.imagepath)
+        self.txtGeneralWebImageUrl.setText(ms_map.web.imageurl)
+        self.txtGeneralWebTempPath.setText(ms_map.web.temppath)
+        self.txtGeneralExternalGraphicRegexp.setText(ms_map.web.validation.get("sld_external_graphic"))
+        self.txtMapFontsetPath.setText(ms_map.fontset.filename)
+        
+        self.txtMetadataOwsOwsEnableRequest.setText(ms_map.web.metadata.get("ows_enable_request"))
+        self.txtMetadataOwsOwsTitle.setText(ms_map.web.metadata.get("ows_title"))
+        self.txtMetadataOwsOwsSrs.setText(ms_map.web.metadata.get("ows_srs"))
+        self.txtMetadataOwsOwsOnlineResource.setText(ms_map.web.metadata.get("ows_onlineresource").split('?')[0])
+        self.txtMetadataOwsWebOwsAllowedIpList.setText(ms_map.web.metadata.get("ows_allowed_ip_list"))
+        self.txtMetadataOwsWebOwsDeniedIpList.setText(ms_map.web.metadata.get("ows_denied_ip_list"))
+        self.txtMetadataOwsWebOwsSchemasLocation.setText(ms_map.web.metadata.get("ows_schemas_location"))
+        self.txtMetadataOwsWebOwsUpdatesequence.setText(ms_map.web.metadata.get("ows_updatesequence"))
+        self.txtMetadataOwsWebOwsHttpMaxAge.setText(ms_map.web.metadata.get("ows_http_max_age"))
+        self.txtMetadataOwsWebOwsSldEnabled.setText(ms_map.web.metadata.get("ows_sld_enabled"))
+         
+        self.txtMetadataWmsWebWmsEnableRequest.setText(ms_map.web.metadata.get("wms_enable_request"))
+        self.txtMetadataWmsWebWmsTitle.setText(ms_map.web.metadata.get("wms_title"))
+        self.txtMetadataWmsWebWmsOnlineresource.setText(ms_map.web.metadata.get("wms_onlineresource").split('?')[0])
+        self.txtMetadataWmsWebWmsSrs.setText(ms_map.web.metadata.get("wms_srs"))
+        self.txtMetadataWmsWebWmsAttrbutionOnlineresource.setText(ms_map.web.metadata.get("wms_attribution_onlineresource"))
+        self.txtMetadataWmsWebWmsAttributionTitle.setText(ms_map.web.metadata.get("wms_attribution_title"))
+        self.txtMetadataWmsWebWmsBboxExtended.setText(ms_map.web.metadata.get("wms_bbox_extended"))
+        self.txtMetadataWmsWebWmsFeatureInfoMimeType.setText(ms_map.web.metadata.get("wms_feature_info_mime_type"))
+        self.txtMetadataWmsWebWmsEncoding.setText(ms_map.web.metadata.get("wms_encoding"))
+        self.txtMetadataWmsWebWmsGetcapabilitiesVersion.setText(ms_map.web.metadata.get("wms_getcapabilities_version"))
+        self.txtMetadataWmsWebWmsFees.setText(ms_map.web.metadata.get("wms_fees"))
+        self.txtMetadataWmsWebWmsGetmapFormallist.setText(ms_map.web.metadata.get("wms_getmap_formatlist"))
+        self.txtMetadataWmsWebWmsGetlegendgraphicFormailist.setText(ms_map.web.metadata.get("wms_getlegendgraphic_formatlist"))
+        self.txtMetadataWmsWebWmsKeywordlistVocabulary.setText(ms_map.web.metadata.get("wms_keywordlist_vocabulary"))
+        self.txtMetadataWmsWebWmsKeywordlist.setText(ms_map.web.metadata.get("wms_keywordlist"))
+        self.txtMetadataWmsWebWmsLanguages.setText(ms_map.web.metadata.get("wms_languages"))
+        self.txtMetadataWmsWebWmsLayerlimit.setText(ms_map.web.metadata.get("wms_layerlimit"))
+        self.txtMetadataWmsWebWmsRootlayerKeywordlist.setText(ms_map.web.metadata.get("wms_rootlayer_keywordlist"))
+        self.txtMetadataWmsWebWmsRemoteSldMaxBytes.setText(ms_map.web.metadata.get("wms_remote_sld_max_bytes"))
+        self.txtMetadataWmsWebWmsServiceOnlineResource.setText(ms_map.web.metadata.get("wms_service_onlineresource"))
+        self.txtMetadataWmsWebWmsResx.setText(ms_map.web.metadata.get("wms_resx"))
+        self.txtMetadataWmsWebWmsResy.setText(ms_map.web.metadata.get("wms_resy"))
+        self.txtMetadataWmsWebWmsRootlayerAbstract.setText(ms_map.web.metadata.get("wms_rootlayer_abstract"))
+        self.txtMetadataWmsWebWmsRootlayerTitle.setText(ms_map.web.metadata.get("wms_rootlayer_title"))
+        self.txtMetadataWmsWebWmsTimeformat.setText(ms_map.web.metadata.get("wms_timeformat"))
+        
+        self.txtMetadataWfsWebWfsEnableRequest.setText(ms_map.web.metadata.get("wfs_enable_request"))
+        self.txtMetadataWfsWebWfsTitle.setText(ms_map.web.metadata.get("wfs_title"))
+        self.txtMetadataWfsWebWfsOnlineresource.setText(ms_map.web.metadata.get("wfs_onlineresource").split('?')[0])
+        self.txtMetadataWfsWebWfsAbstract.setText(ms_map.web.metadata.get("wfs_abstract"))
+        self.txtMetadataWfsWebWfsAccessconstraints.setText(ms_map.web.metadata.get("wfs_accessconstraints"))
+        self.txtMetadataWfsWebWfsEncoding.setText(ms_map.web.metadata.get("wfs_encoding"))
+        self.txtMetadataWfsWebWfsFeatureCollection.setText(ms_map.web.metadata.get("wfs_feature_collection"))
+        self.txtMetadataWfsWebWfsFees.setText(ms_map.web.metadata.get("wfs_fees"))
+        self.txtMetadataWfsWebWfsKeywordlist.setText(ms_map.web.metadata.get("wfs_keywordlist"))
+        self.txtMetadataWfsWebWfsGetcapabilitiesVersion.setText(ms_map.web.metadata.get("wfs_getcapabilities_version"))
+        self.txtMetadataWfsWebWfsNamespacePrefix.setText(ms_map.web.metadata.get("wfs_namespace_prefix"))
+        self.txtMetadataWfsWebWfsMaxfeatures.setText(ms_map.web.metadata.get("wfs_maxfeatures"))
+        self.txtMetadataWfsWebWfsServiceOnlineresource.setText(ms_map.web.metadata.get("wfs_service_onlineresource"))
+        self.txtMetadataWfsWebWfsNamespaceUri.setText(ms_map.web.metadata.get("wfs_namespace_uri"))
+        
+        self.txtMetadataWcsWebWcsEnableRequest.setText(ms_map.web.metadata.get("wcs_enable_request"))
+        self.txtMetadataWcsWebWcsLabel.setText(ms_map.web.metadata.get("wcs_label"))
+        self.txtMetadataWcsWebWcsAbstract.setText(ms_map.web.metadata.get("wcs_abstract"))
+        self.txtMetadataWcsWebWcsAccessconstraints.setText(ms_map.web.metadata.get("wcs_accessconstraints"))
+        self.txtMetadataWcsWebWcsDescription.setText(ms_map.web.metadata.get("wcs_description"))
+        self.txtMetadataWcsWebWcsKeywords.setText(ms_map.web.metadata.get("wcs_keywords"))
+        self.txtMetadataWcsWebWcsFees.setText(ms_map.web.metadata.get("wcs_fees"))
+        self.txtMetadataWcsWebWcsMetadatalinkFormat.setText(ms_map.web.metadata.get("wcs_metadatalink_format"))
+        self.txtMetadataWcsWebWcsMetadatalinkHref.setText(ms_map.web.metadata.get("wcs_metadatalink_href"))
+        self.txtMetadataWcsWebWcsMetadatalinkType.setText(ms_map.web.metadata.get("wcs_metadatalink_type"))
+        self.txtMetadataWcsWebWcsName.setText(ms_map.web.metadata.get("wcs_name"))
+        self.txtMetadataWcsWebWcsServiceOnlineresource.setText(ms_map.web.metadata.get("wcs_service_onlineresource"))
+        
+        self.txtTemplatePath.setText(ms_map.web.template)
+        self.txtTmplHeaderPath.setText(ms_map.web.header)
+        self.txtTmplFooterPath.setText(ms_map.web.footer)
+        
 
     def selectTemplateBody(self):
         self.selectTemplateFile( self.txtTemplatePath )
@@ -235,7 +348,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             return
 
         # create a new ms_map
-        ms_map = mapscript.mapObj()
+#         ms_map = mapscript.mapObj()
         ms_map.name = _toUtf8( self.txtGeneralMapName.text() )
 
         # map size
@@ -260,11 +373,11 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         ms_map.setProjection( _toUtf8( self.canvas.mapRenderer().destinationCrs().toProj4() ) )
         
         if self.txtGeneralMapProjLibFolder.text().strip(' \t\n\r') != "":
-            ms_map.setConfigOption("PROJ_LIB", self.txtGeneralMapProjLibFolder.text().strip(' \t\n\r'))
+            ms_map.setConfigOption(self.PROJ_LIB, self.txtGeneralMapProjLibFolder.text().strip(' \t\n\r'))
         if self.txtMetadataMapMsErrorFilePath.text().strip(' \t\n\r') != "":
-            ms_map.setConfigOption("MS_ERRORFILE", self.txtMetadataMapMsErrorFilePath.text().strip(' \t\n\r'))
+            ms_map.setConfigOption(self.MS_ERRORFILE, self.txtMetadataMapMsErrorFilePath.text().strip(' \t\n\r'))
         if self.txtMetadataMapDebugLevel.text().strip(' \t\n\r') != "":
-            ms_map.setConfigOption("MS_DEBUGLEVEL", self.txtMetadataMapDebugLevel.text().strip(' \t\n\r'))
+            ms_map.setConfigOption(self.MS_DEBUGLEVEL, self.txtMetadataMapDebugLevel.text().strip(' \t\n\r'))
 
 #         if self.txtGeneralMapShapePath.text() != "":
 #             ms_map.shapepath = _toUtf8( self.txtGeneralMapShapePath.text() )
@@ -274,7 +387,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         ms_map.imagecolor.setRGB( r, g, b )    #255,255,255
         ms_map.setImageType( _toUtf8( self.cmbGeneralMapImageType.currentText() ) )
         ms_outformat = ms_map.getOutputFormatByName( ms_map.imagetype )
-        ms_outformat.transparent = self.onOffMap[ True ]
+#         ms_outformat.transparent = self.onOffMap[ True ]
 
         # legend section
         #r,g,b,a = self.canvas.canvasColor().getRgb()
@@ -285,8 +398,8 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         #ms_map.legend.label.type = mapscript.MS_BITMAP
         #ms_map.legend.label.size = MEDIUM??
         #ms_map.legend.label.color.setRgb( 0, 0, 89 )
-        #ms_map.legend.label.partials = self.trueFalseMap[ self.checkBoxPartials ]
-        #ms_map.legend.label.force = self.trueFalseMap[ self.checkBoxForce ]
+#         ms_map.legend.label.partials = self.trueFalseMap[ self.checkBoxPartials ]
+#         ms_map.legend.label.force = self.trueFalseMap[ self.checkBoxForce ]
         #ms_map.legend.template = "[templatepath]"
 
         # web section
@@ -316,6 +429,8 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
              
         if self.txtMetadataOwsOwsOnlineResource.text() != "":
             ms_map.setMetaData( "ows_onlineresource", _toUtf8( u"%s?map=%s" % (self.txtMetadataOwsOwsOnlineResource.text(), self.txtMapFilePath.text()) ) )
+        elif self.txtGeneralWebServerUrl.text() != "":
+            ms_map.setMetaData( "ows_onlineresource", _toUtf8( u"%s?map=%s" % (self.txtGeneralWebServerUrl.text(), self.txtMapFilePath.text()) ) )
             
         srsList = []
         srsList.append( _toUtf8( self.canvas.mapRenderer().destinationCrs().authid() ) )
