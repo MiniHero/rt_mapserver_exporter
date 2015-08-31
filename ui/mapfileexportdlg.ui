@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>814</width>
-    <height>669</height>
+    <height>792</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,26 +41,6 @@
        <string>General</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="txtMapFilePath">
-         <property name="toolTip">
-          <string>Name for the map file to be created from the QGIS project file</string>
-         </property>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Map file</string>
-         </property>
-         <property name="buddy">
-          <cstring>txtMapFilePath</cstring>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0" colspan="5">
         <widget class="QGroupBox" name="grpMap">
          <property name="sizePolicy">
@@ -73,62 +53,45 @@
           <string>Map</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="4">
-           <widget class="QLabel" name="label5">
+          <item row="4" column="2">
+           <widget class="QLabel" name="label_31">
             <property name="text">
-             <string>Image type</string>
-            </property>
-            <property name="indent">
-             <number>20</number>
-            </property>
-            <property name="buddy">
-             <cstring>cmbGeneralMapImageType</cstring>
+             <string>Max Size</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QLineEdit" name="txtGeneralMapHeight">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label1">
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="text">
+             <string>Name</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtGeneralMapName</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="txtMetadataMapDebugLevel"/>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_30">
+            <property name="text">
+             <string>Debug Level (0-5)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="txtGeneralMapWidth">
             <property name="text">
              <string notr="true">600</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label2">
-            <property name="text">
-             <string>Width</string>
-            </property>
-            <property name="buddy">
-             <cstring>txtGeneralMapWidth</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="txtGeneralMapProjLibFolder"/>
-          </item>
-          <item row="1" column="5">
-           <widget class="QComboBox" name="cmbGeneralMapUnits">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="3">
-           <widget class="QLineEdit" name="txtGeneralMapName">
-            <property name="toolTip">
-             <string/>
-            </property>
-            <property name="text">
-             <string notr="true">QGIS-MAP</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>PROJ LIB Folder*</string>
-            </property>
-           </widget>
+          <item row="0" column="5">
+           <widget class="QComboBox" name="cmbGeneralMapImageType"/>
           </item>
           <item row="1" column="4">
            <widget class="QLabel" name="label4">
@@ -159,38 +122,65 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="txtGeneralMapWidth">
+          <item row="0" column="1" colspan="3">
+           <widget class="QLineEdit" name="txtGeneralMapName">
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="text">
+             <string notr="true">QGIS-MAP</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>PROJ LIB Folder*</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="txtGeneralMapProjLibFolder"/>
+          </item>
+          <item row="1" column="5">
+           <widget class="QComboBox" name="cmbGeneralMapUnits">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="txtGeneralMapHeight">
             <property name="text">
              <string notr="true">600</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="5">
-           <widget class="QComboBox" name="cmbGeneralMapImageType"/>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label1">
-            <property name="toolTip">
-             <string/>
-            </property>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label2">
             <property name="text">
-             <string>Name</string>
+             <string>Width</string>
             </property>
             <property name="buddy">
-             <cstring>txtGeneralMapName</cstring>
+             <cstring>txtOutputFormatDriver_1</cstring>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_30">
+          <item row="0" column="4">
+           <widget class="QLabel" name="label5">
             <property name="text">
-             <string>Debug Level (0-5)</string>
+             <string>Image type</string>
+            </property>
+            <property name="indent">
+             <number>20</number>
+            </property>
+            <property name="buddy">
+             <cstring>cmbGeneralMapImageType</cstring>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
-           <widget class="QLineEdit" name="txtMetadataMapDebugLevel"/>
+          <item row="2" column="3">
+           <widget class="QLineEdit" name="txtMetadataMapMsErrorFilePath"/>
           </item>
           <item row="2" column="2">
            <widget class="QLabel" name="label_29">
@@ -199,31 +189,22 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="3">
-           <widget class="QLineEdit" name="txtMetadataMapMsErrorFilePath"/>
+          <item row="4" column="3">
+           <widget class="QLineEdit" name="txtGeneralMapMaxSize">
+            <property name="text">
+             <string>4096</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
        </item>
-       <item row="0" column="3">
-        <widget class="QToolButton" name="toolButtonImportMapFile">
+       <item row="0" column="2">
+        <widget class="QToolButton" name="btnChooseFile">
          <property name="text">
-          <string>import from map file...</string>
+          <string>...</string>
          </property>
         </widget>
-       </item>
-       <item row="3" column="0">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item row="2" column="0" colspan="5">
         <widget class="QGroupBox" name="groupBox_2">
@@ -249,7 +230,7 @@
              <string>Online resource URL</string>
             </property>
             <property name="buddy">
-             <cstring>txtGeneralWebServerUrl</cstring>
+             <cstring>txtOutputFormatName_2</cstring>
             </property>
            </widget>
           </item>
@@ -278,7 +259,7 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
              <string>Image path</string>
             </property>
             <property name="buddy">
-             <cstring>txtGeneralWebServerUrl</cstring>
+             <cstring>txtOutputFormatName_2</cstring>
             </property>
            </widget>
           </item>
@@ -304,7 +285,7 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
              <string>Temporary path</string>
             </property>
             <property name="buddy">
-             <cstring>txtGeneralWebServerUrl</cstring>
+             <cstring>txtOutputFormatName_2</cstring>
             </property>
            </widget>
           </item>
@@ -323,7 +304,7 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
              <string>External graphic regexp</string>
             </property>
             <property name="buddy">
-             <cstring>txtGeneralWebServerUrl</cstring>
+             <cstring>txtOutputFormatName_2</cstring>
             </property>
            </widget>
           </item>
@@ -359,7 +340,7 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
              <string>Image URL</string>
             </property>
             <property name="buddy">
-             <cstring>txtGeneralWebServerUrl</cstring>
+             <cstring>txtOutputFormatName_2</cstring>
             </property>
            </widget>
           </item>
@@ -377,11 +358,822 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
          </layout>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QToolButton" name="btnChooseFile">
+       <item row="0" column="3">
+        <widget class="QToolButton" name="toolButtonImportMapFile">
          <property name="text">
-          <string>...</string>
+          <string>import from map file...</string>
          </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Map file</string>
+         </property>
+         <property name="buddy">
+          <cstring>txtMapFilePath</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="txtMapFilePath">
+         <property name="toolTip">
+          <string>Name for the map file to be created from the QGIS project file</string>
+         </property>
+         <property name="text">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabOutputFormat">
+      <attribute name="title">
+       <string>Output Format</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="grpBoxOutputFormat_1">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Output Format 1</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_44">
+            <property name="text">
+             <string>Format Option 3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label1">
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="text">
+             <string>Name</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtGeneralMapName</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_290">
+            <property name="text">
+             <string>Extension</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatDriver_1">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>MIME Type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label2">
+            <property name="text">
+             <string>Driver</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatDriver_1</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatName_1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_34">
+            <property name="text">
+             <string>Transparent</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatExtension_1"/>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_35">
+            <property name="text">
+             <string>Format Option 1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_32">
+            <property name="text">
+             <string>Image Mode</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_2_1"/>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_1_1"/>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_38">
+            <property name="text">
+             <string>Format Option 2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatMimetype_1"/>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="label_50">
+            <property name="text">
+             <string>Format Option 4</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_3_1"/>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_4_1"/>
+          </item>
+          <item row="7" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_1_1"/>
+          </item>
+          <item row="8" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_2_1"/>
+          </item>
+          <item row="9" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_3_1"/>
+          </item>
+          <item row="10" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_4_1"/>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="cmbOutputFormatImageMode_1"/>
+          </item>
+          <item row="6" column="1">
+           <widget class="QComboBox" name="cmbOutputFormatTransparent_1"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="grpBoxOutputFormat_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Output Format 3</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="4" column="1">
+           <widget class="QComboBox" name="cmbOutputFormatImageMode_3"/>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_40">
+            <property name="text">
+             <string>Format Option 1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_39">
+            <property name="text">
+             <string>Transparent</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatName_3">
+            <property name="toolTip">
+             <string>The URL to the mapserver executable.
+
+For example: 
+http://my.host.com/cgi-bin/mapserv.exe</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label6_4">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Extension</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_302">
+            <property name="text">
+             <string>Format Option 3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatDriver_3">
+            <property name="toolTip">
+             <string>Path to the temporary directory for writing temporary files and images. Must be writable by the user the web server is running as. Must end with a / or depending on your platform.</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatExtension_3">
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label6_7">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string extracomment="Validation block regexp to allow external graphic use"/>
+            </property>
+            <property name="text">
+             <string>Image Mode</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label6_6">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>MIME Type</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_2_3"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label6">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Name</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_303">
+            <property name="text">
+             <string>Format Option 4</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_1_3"/>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_43">
+            <property name="text">
+             <string>Format Option 2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label6_5">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Driver</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_4_3"/>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_3_3"/>
+          </item>
+          <item row="2" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatMimetype_3">
+            <property name="toolTip">
+             <string>Base URL for &quot;Image path&quot;.
+This is the URL that will take the web browser to &quot;Image path&quot; to get the images.</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="cmbOutputFormatTransparent_3"/>
+          </item>
+          <item row="6" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_1_3"/>
+          </item>
+          <item row="7" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_2_3"/>
+          </item>
+          <item row="8" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_3_3"/>
+          </item>
+          <item row="9" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_4_3"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QGroupBox" name="grpBoxOutputFormat_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Output Format 4</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatName_4">
+            <property name="toolTip">
+             <string>The URL to the mapserver executable.
+
+For example: 
+http://my.host.com/cgi-bin/mapserv.exe</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label6_6">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>MIME Type</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_1_4"/>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_2_4"/>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_43">
+            <property name="text">
+             <string>Format Option 2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_4_4"/>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_3_4"/>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_56">
+            <property name="text">
+             <string>Format Option 4</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatMimetype_4">
+            <property name="toolTip">
+             <string>Base URL for &quot;Image path&quot;.
+This is the URL that will take the web browser to &quot;Image path&quot; to get the images.</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label6_5">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Driver</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatExtension_4">
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label6">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Name</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatDriver_4">
+            <property name="toolTip">
+             <string>Path to the temporary directory for writing temporary files and images. Must be writable by the user the web server is running as. Must end with a / or depending on your platform.</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label6_4">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Extension</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label6_7">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string extracomment="Validation block regexp to allow external graphic use"/>
+            </property>
+            <property name="text">
+             <string>Image Mode</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_40">
+            <property name="text">
+             <string>Format Option 1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_39">
+            <property name="text">
+             <string>Transparent</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_55">
+            <property name="text">
+             <string>Format Option 3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_1_4"/>
+          </item>
+          <item row="7" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_2_4"/>
+          </item>
+          <item row="8" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_3_4"/>
+          </item>
+          <item row="9" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_4_4"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="cmbOutputFormatImageMode_4"/>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="cmbOutputFormatTransparent_4"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="grpBoxOutputFormat_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Output Format 2</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_301">
+            <property name="text">
+             <string>Format Option 4</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatDriver_2">
+            <property name="toolTip">
+             <string>Path to the temporary directory for writing temporary files and images. Must be writable by the user the web server is running as. Must end with a / or depending on your platform.</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_40">
+            <property name="text">
+             <string>Format Option 1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_39">
+            <property name="text">
+             <string>Transparent</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label6_4">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Extension</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label6_7">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string extracomment="Validation block regexp to allow external graphic use"/>
+            </property>
+            <property name="text">
+             <string>Image Mode</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatMimetype_2">
+            <property name="toolTip">
+             <string>Base URL for &quot;Image path&quot;.
+This is the URL that will take the web browser to &quot;Image path&quot; to get the images.</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label6_6">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>MIME Type</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatExtension_2">
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_4_2"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label6">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Name</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_3_2"/>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtOutputFormatName_2">
+            <property name="toolTip">
+             <string>The URL to the mapserver executable.
+
+For example: 
+http://my.host.com/cgi-bin/mapserv.exe</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label6_5">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Driver</string>
+            </property>
+            <property name="buddy">
+             <cstring>txtOutputFormatName_2</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_43">
+            <property name="text">
+             <string>Format Option 2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_2_2"/>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionKey_1_2"/>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_300">
+            <property name="text">
+             <string>Format Option 3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_1_2"/>
+          </item>
+          <item row="7" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_2_2"/>
+          </item>
+          <item row="8" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_3_2"/>
+          </item>
+          <item row="9" column="2">
+           <widget class="QLineEdit" name="txtOutputFormatFormatOptionValue_4_2"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="cmbOutputFormatImageMode_2"/>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="cmbOutputFormatTransparent_2"/>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -396,7 +1188,7 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
          <x>0</x>
          <y>0</y>
          <width>791</width>
-         <height>581</height>
+         <height>711</height>
         </rect>
        </property>
        <property name="currentIndex">
@@ -446,69 +1238,70 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
             <string>Web</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_9">
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_42">
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_72">
               <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recommmended&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>gml_featureid</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
-             <widget class="QLineEdit" name="txtMetadataOwsOwsTitle">
+            <item row="3" column="2">
+             <widget class="QLabel" name="label_226">
               <property name="text">
-               <string/>
+               <string>ows_srs</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="3">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsUpdatesequence"/>
+            <item row="9" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsHttpMaxAge"/>
             </item>
-            <item row="7" column="2">
-             <widget class="QLabel" name="label_48">
+            <item row="9" column="0">
+             <widget class="QLabel" name="label_70">
               <property name="text">
-               <string>ows_updatesequence</string>
+               <string>ows_http_max_age</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="3">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsSldEnabled"/>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="txtMetadataOwsOwsEnableRequest">
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_49">
               <property name="text">
-               <string/>
+               <string>ows_schemas_location</string>
               </property>
              </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_228">
+              <property name="text">
+               <string>ows_onlineresource</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_227">
+              <property name="text">
+               <string>ows_title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsGmlFeatureid"/>
             </item>
             <item row="6" column="0">
-             <widget class="QLabel" name="label_22">
+             <widget class="QLabel" name="label_8">
               <property name="text">
-               <string>ows_allowed_ip_list</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Optional&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="2">
-             <widget class="QLabel" name="label_23">
+            <item row="9" column="2">
+             <widget class="QLabel" name="label_69">
               <property name="text">
-               <string>ows_denied_ip_list</string>
+               <string>ows_sld_enabled</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="3">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsDeniedIpList"/>
-            </item>
-            <item row="7" column="1">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsSchemasLocation"/>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsAllowedIpList"/>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLineEdit" name="txtMetadataOwsOwsOnlineResource">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
+            <item row="3" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsOwsSrs"/>
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_41">
@@ -524,60 +1317,93 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
               </property>
              </widget>
             </item>
-            <item row="3" column="3">
-             <widget class="QLineEdit" name="txtMetadataOwsOwsSrs"/>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_8">
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsOwsOnlineResource">
               <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Optional&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string/>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_7">
+            <item row="7" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsDeniedIpList"/>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsAllowedIpList"/>
+            </item>
+            <item row="8" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsSchemasLocation"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsOwsEnableRequest">
               <property name="text">
-               <string>ows_title</string>
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_42">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recommmended&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QLabel" name="label_23">
+              <property name="text">
+               <string>ows_denied_ip_list</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsSldEnabled"/>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_22">
+              <property name="text">
+               <string>ows_allowed_ip_list</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsUpdatesequence"/>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsOwsTitle">
+              <property name="text">
+               <string/>
               </property>
              </widget>
             </item>
             <item row="8" column="2">
-             <widget class="QLabel" name="label_69">
+             <widget class="QLabel" name="label_48">
               <property name="text">
-               <string>ows_sld_enabled</string>
+               <string>ows_updatesequence</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="label_49">
+            <item row="4" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsOwsGetFeatureFormatList">
               <property name="text">
-               <string>ows_schemas_location</string>
+               <string>gml,geojson,jpeg</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_4">
+            <item row="4" column="2">
+             <widget class="QLabel" name="label_57">
               <property name="text">
-               <string>ows_onlineresource</string>
+               <string>ows_getfeature_formatlist</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="label_70">
+            <item row="5" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsGmlIncludeItems"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_73">
               <property name="text">
-               <string>ows_http_max_age</string>
+               <string>gml_include_items</string>
               </property>
              </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QLabel" name="label_6">
-              <property name="text">
-               <string>ows_srs</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="1">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsHttpMaxAge"/>
             </item>
            </layout>
           </widget>
@@ -607,7 +1433,7 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
            <x>0</x>
            <y>0</y>
            <width>761</width>
-           <height>551</height>
+           <height>681</height>
           </rect>
          </property>
          <property name="widgetResizable">
@@ -618,7 +1444,7 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>744</width>
+            <width>500</width>
             <height>700</height>
            </rect>
           </property>
@@ -989,14 +1815,14 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
             <string>Web</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_10">
-            <item row="7" column="2">
+            <item row="8" column="2">
              <widget class="QLabel" name="label_15">
               <property name="text">
                <string>wfs_feature_collection</string>
               </property>
              </widget>
             </item>
-            <item row="9" column="2">
+            <item row="10" column="2">
              <widget class="QLabel" name="label_25">
               <property name="text">
                <string>wfs_namespace_prefix</string>
@@ -1031,7 +1857,7 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
               </property>
              </widget>
             </item>
-            <item row="10" column="2">
+            <item row="11" column="2">
              <widget class="QLabel" name="label_45">
               <property name="text">
                <string>wfs_service_onlineresource</string>
@@ -1045,26 +1871,26 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
               </property>
              </widget>
             </item>
-            <item row="11" column="0">
+            <item row="12" column="0">
              <widget class="QLabel" name="label_19">
               <property name="text">
                <string>wfs_namespace_uri</string>
               </property>
              </widget>
             </item>
-            <item row="10" column="3">
+            <item row="11" column="3">
              <widget class="QLineEdit" name="txtMetadataWfsWebWfsServiceOnlineresource"/>
             </item>
-            <item row="7" column="1">
+            <item row="8" column="1">
              <widget class="QLineEdit" name="txtMetadataWfsWebWfsEncoding"/>
             </item>
-            <item row="6" column="3">
+            <item row="7" column="3">
              <widget class="QLineEdit" name="txtMetadataWfsWebWfsAccessconstraints"/>
             </item>
-            <item row="9" column="3">
+            <item row="10" column="3">
              <widget class="QLineEdit" name="txtMetadataWfsWebWfsNamespacePrefix"/>
             </item>
-            <item row="6" column="2">
+            <item row="7" column="2">
              <widget class="QLabel" name="label_11">
               <property name="text">
                <string>wfs_accessconstraints</string>
@@ -1072,57 +1898,57 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
              </widget>
             </item>
             <item row="9" column="1">
-             <widget class="QLineEdit" name="txtMetadataWfsWebWfsGetcapabilitiesVersion"/>
-            </item>
-            <item row="8" column="1">
              <widget class="QLineEdit" name="txtMetadataWfsWebWfsFees"/>
             </item>
-            <item row="8" column="0">
+            <item row="10" column="1">
+             <widget class="QLineEdit" name="txtMetadataWfsWebWfsGetcapabilitiesVersion"/>
+            </item>
+            <item row="9" column="0">
              <widget class="QLabel" name="label_14">
               <property name="text">
                <string>wfs_fees</string>
               </property>
              </widget>
             </item>
-            <item row="9" column="0">
+            <item row="9" column="3">
+             <widget class="QLineEdit" name="txtMetadataWfsWebWfsKeywordlist"/>
+            </item>
+            <item row="10" column="0">
              <widget class="QLabel" name="label_16">
               <property name="text">
                <string>wfs_getcapabilities_version</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="3">
-             <widget class="QLineEdit" name="txtMetadataWfsWebWfsKeywordlist"/>
+            <item row="12" column="1">
+             <widget class="QLineEdit" name="txtMetadataWfsWebWfsNamespaceUri"/>
             </item>
-            <item row="6" column="0">
+            <item row="7" column="0">
              <widget class="QLabel" name="label_10">
               <property name="text">
                <string>wfs_abstract</string>
               </property>
              </widget>
             </item>
-            <item row="11" column="1">
-             <widget class="QLineEdit" name="txtMetadataWfsWebWfsNamespaceUri"/>
+            <item row="7" column="1">
+             <widget class="QLineEdit" name="txtMetadataWfsWebWfsAbstract"/>
             </item>
-            <item row="10" column="0">
+            <item row="11" column="0">
              <widget class="QLabel" name="label_18">
               <property name="text">
                <string>wfs_maxfeatures</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
-             <widget class="QLineEdit" name="txtMetadataWfsWebWfsAbstract"/>
+            <item row="11" column="1">
+             <widget class="QLineEdit" name="txtMetadataWfsWebWfsMaxfeatures"/>
             </item>
-            <item row="7" column="0">
+            <item row="8" column="0">
              <widget class="QLabel" name="label_12">
               <property name="text">
                <string>wfs_encoding</string>
               </property>
              </widget>
-            </item>
-            <item row="10" column="1">
-             <widget class="QLineEdit" name="txtMetadataWfsWebWfsMaxfeatures"/>
             </item>
             <item row="3" column="1">
              <widget class="QLineEdit" name="txtMetadataWfsWebWfsOnlineresource">
@@ -1131,15 +1957,15 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
               </property>
              </widget>
             </item>
+            <item row="3" column="3">
+             <widget class="QLineEdit" name="txtMetadataWfsWebWfsSrs"/>
+            </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label_26">
               <property name="text">
                <string>wfs_onlineresource</string>
               </property>
              </widget>
-            </item>
-            <item row="3" column="3">
-             <widget class="QLineEdit" name="txtMetadataWfsWebWfsSrs"/>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_13">
@@ -1148,12 +1974,15 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
               </property>
              </widget>
             </item>
-            <item row="8" column="2">
+            <item row="9" column="2">
              <widget class="QLabel" name="label_17">
               <property name="text">
                <string>wfs_keywordlist</string>
               </property>
              </widget>
+            </item>
+            <item row="8" column="3">
+             <widget class="QLineEdit" name="txtMetadataWfsWebWfsFeatureCollection"/>
             </item>
             <item row="1" column="2">
              <widget class="QLabel" name="label_46">
@@ -1162,13 +1991,24 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
               </property>
              </widget>
             </item>
-            <item row="7" column="3">
-             <widget class="QLineEdit" name="txtMetadataWfsWebWfsFeatureCollection"/>
-            </item>
-            <item row="4" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="label_33">
               <property name="text">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Optional&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_71">
+              <property name="text">
+               <string>wfs_getfeature_formatlist</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="txtMetadataWfsWfsGetFeatureFormatList">
+              <property name="text">
+               <string>gml,geojson,jpeg</string>
               </property>
              </widget>
             </item>
@@ -1617,7 +2457,7 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
              <string>Path</string>
             </property>
             <property name="buddy">
-             <cstring>txtGeneralWebServerUrl</cstring>
+             <cstring>txtOutputFormatName_2</cstring>
             </property>
            </widget>
           </item>
@@ -1662,16 +2502,76 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
   <tabstop>txtGeneralMapProjLibFolder</tabstop>
   <tabstop>txtMetadataMapMsErrorFilePath</tabstop>
   <tabstop>txtMetadataMapDebugLevel</tabstop>
+  <tabstop>txtGeneralMapMaxSize</tabstop>
   <tabstop>txtGeneralWebServerUrl</tabstop>
   <tabstop>txtGeneralWebImagePath</tabstop>
   <tabstop>txtGeneralWebImageUrl</tabstop>
   <tabstop>txtGeneralWebTempPath</tabstop>
   <tabstop>txtGeneralExternalGraphicRegexp</tabstop>
+  <tabstop>txtOutputFormatName_1</tabstop>
+  <tabstop>txtOutputFormatDriver_1</tabstop>
+  <tabstop>txtOutputFormatMimetype_1</tabstop>
+  <tabstop>txtOutputFormatExtension_1</tabstop>
+  <tabstop>cmbOutputFormatImageMode_1</tabstop>
+  <tabstop>cmbOutputFormatTransparent_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_1_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_1_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_2_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_2_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_3_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_3_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_4_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_4_1</tabstop>
+  <tabstop>txtOutputFormatName_2</tabstop>
+  <tabstop>txtOutputFormatDriver_2</tabstop>
+  <tabstop>txtOutputFormatMimetype_2</tabstop>
+  <tabstop>txtOutputFormatExtension_2</tabstop>
+  <tabstop>cmbOutputFormatImageMode_2</tabstop>
+  <tabstop>cmbOutputFormatTransparent_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_1_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_1_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_2_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_2_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_3_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_3_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_4_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_4_2</tabstop>
+  <tabstop>txtOutputFormatName_3</tabstop>
+  <tabstop>txtOutputFormatDriver_3</tabstop>
+  <tabstop>txtOutputFormatMimetype_3</tabstop>
+  <tabstop>txtOutputFormatExtension_3</tabstop>
+  <tabstop>cmbOutputFormatImageMode_3</tabstop>
+  <tabstop>cmbOutputFormatTransparent_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_1_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_1_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_2_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_2_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_3_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_3_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_4_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_4_3</tabstop>
+  <tabstop>txtOutputFormatName_4</tabstop>
+  <tabstop>txtOutputFormatDriver_4</tabstop>
+  <tabstop>txtOutputFormatMimetype_4</tabstop>
+  <tabstop>txtOutputFormatExtension_4</tabstop>
+  <tabstop>cmbOutputFormatImageMode_4</tabstop>
+  <tabstop>cmbOutputFormatTransparent_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_1_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_1_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_2_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_2_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_3_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_3_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionKey_4_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_4_4</tabstop>
   <tabstop>checkBoxOws</tabstop>
   <tabstop>txtMetadataOwsOwsEnableRequest</tabstop>
+  <tabstop>txtMetadataOwsGmlFeatureid</tabstop>
   <tabstop>txtMetadataOwsOwsTitle</tabstop>
   <tabstop>txtMetadataOwsOwsSrs</tabstop>
   <tabstop>txtMetadataOwsOwsOnlineResource</tabstop>
+  <tabstop>txtMetadataOwsOwsGetFeatureFormatList</tabstop>
+  <tabstop>txtMetadataOwsGmlIncludeItems</tabstop>
   <tabstop>txtMetadataOwsWebOwsAllowedIpList</tabstop>
   <tabstop>txtMetadataOwsWebOwsDeniedIpList</tabstop>
   <tabstop>txtMetadataOwsWebOwsSchemasLocation</tabstop>
@@ -1709,6 +2609,7 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
   <tabstop>txtMetadataWfsWebWfsTitle</tabstop>
   <tabstop>txtMetadataWfsWebWfsOnlineresource</tabstop>
   <tabstop>txtMetadataWfsWebWfsSrs</tabstop>
+  <tabstop>txtMetadataWfsWfsGetFeatureFormatList</tabstop>
   <tabstop>txtMetadataWfsWebWfsAbstract</tabstop>
   <tabstop>txtMetadataWfsWebWfsAccessconstraints</tabstop>
   <tabstop>txtMetadataWfsWebWfsEncoding</tabstop>
@@ -1738,20 +2639,33 @@ This is the URL that will take the web browser to &quot;Image path&quot; to get 
   <tabstop>checkGenerateTmpl</tabstop>
   <tabstop>templateTable</tabstop>
   <tabstop>txtTmplHeaderPath</tabstop>
+  <tabstop>btnChooseTmplHeader</tabstop>
   <tabstop>txtTmplFooterPath</tabstop>
+  <tabstop>btnChooseTmplFooter</tabstop>
   <tabstop>txtMapFontsetPath</tabstop>
   <tabstop>checkCreateFontFile</tabstop>
   <tabstop>checkBoxForce</tabstop>
   <tabstop>checkBoxPartials</tabstop>
-  <tabstop>btnChooseTmplHeader</tabstop>
   <tabstop>scrollArea</tabstop>
-  <tabstop>btnChooseTmplFooter</tabstop>
-  <tabstop>scrollArea</tabstop>
-  <tabstop>scrollArea</tabstop>
-  <tabstop>btnChooseTemplate</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>tabWiget</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
   <tabstop>tabWidget_2</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>toolButtonImportMapFile</tabstop>
+  <tabstop>btnChooseTemplate</tabstop>
+  <tabstop>btnChooseFile</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>tabWidget_2</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources/>
  <connections>
