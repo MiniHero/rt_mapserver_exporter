@@ -239,27 +239,40 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         self.txtGeneralMapProjLibFolder.setText(ms_map.getConfigOption(self.PROJ_LIB))
         self.txtMetadataMapMsErrorFilePath.setText(ms_map.getConfigOption(self.MS_ERRORFILE))
         self.txtMetadataMapDebugLevel.setText(ms_map.getConfigOption(self.MS_DEBUGLEVEL))
-        self.txtGeneralWebServerUrl.setText(ms_map.web.metadata.get("ows_onlineresource").split('?')[0])
+        if ms_map.web.metadata.get("ows_onlineresource") is not None:
+            self.txtGeneralWebServerUrl.setText(ms_map.web.metadata.get("ows_onlineresource").split('?')[0])
         self.txtGeneralWebImagePath.setText(ms_map.web.imagepath)
         self.txtGeneralWebImageUrl.setText(ms_map.web.imageurl)
         self.txtGeneralWebTempPath.setText(ms_map.web.temppath)
         self.txtGeneralExternalGraphicRegexp.setText(ms_map.web.validation.get("sld_external_graphic"))
         self.txtMapFontsetPath.setText(ms_map.fontset.filename)
         
+        self.txtOutputFormatName_1.setText(ms_map.outputformat.name)
+        self.txtOutputFormatDriver_1.setText(ms_map.outputformat.driver)
+        self.txtOutputFormatMimetype_1.setText(ms_map.outputformat.mimetype)
+        self.txtOutputFormatExtension_1.setText(ms_map.outputformat.extension)
+        self.txtOutputFormatImageMode_1.setText(ms_map.outputformat.imagemode)
+        self.txtOutputFormatTransparent_1.setText(ms_map.outputformat.transparent)
+        self.txtOutputFormatFormatOption_1_1.setText(ms_map.outputformat.formatoptions)
+#         self.txtOutputFormatName_1.setText(ms_map.outputformat.name)
+        
         self.txtMetadataOwsOwsEnableRequest.setText(ms_map.web.metadata.get("ows_enable_request"))
         self.txtMetadataOwsOwsTitle.setText(ms_map.web.metadata.get("ows_title"))
         self.txtMetadataOwsOwsSrs.setText(ms_map.web.metadata.get("ows_srs"))
-        self.txtMetadataOwsOwsOnlineResource.setText(ms_map.web.metadata.get("ows_onlineresource").split('?')[0])
+        if ms_map.web.metadata.get("ows_onlineresource") is not None:
+            self.txtMetadataOwsOwsOnlineResource.setText(ms_map.web.metadata.get("ows_onlineresource").split('?')[0])
         self.txtMetadataOwsWebOwsAllowedIpList.setText(ms_map.web.metadata.get("ows_allowed_ip_list"))
         self.txtMetadataOwsWebOwsDeniedIpList.setText(ms_map.web.metadata.get("ows_denied_ip_list"))
         self.txtMetadataOwsWebOwsSchemasLocation.setText(ms_map.web.metadata.get("ows_schemas_location"))
         self.txtMetadataOwsWebOwsUpdatesequence.setText(ms_map.web.metadata.get("ows_updatesequence"))
         self.txtMetadataOwsWebOwsHttpMaxAge.setText(ms_map.web.metadata.get("ows_http_max_age"))
         self.txtMetadataOwsWebOwsSldEnabled.setText(ms_map.web.metadata.get("ows_sld_enabled"))
+        self.txtMetadataOwsOwsGetFeatureFormatList.setText(ms_map.web.metadata.get("ows_getfeature_formatlist"))
          
         self.txtMetadataWmsWebWmsEnableRequest.setText(ms_map.web.metadata.get("wms_enable_request"))
         self.txtMetadataWmsWebWmsTitle.setText(ms_map.web.metadata.get("wms_title"))
-        self.txtMetadataWmsWebWmsOnlineresource.setText(ms_map.web.metadata.get("wms_onlineresource").split('?')[0])
+        if ms_map.web.metadata.get("wms_onlineresource") is not None:
+            self.txtMetadataWmsWebWmsOnlineresource.setText(ms_map.web.metadata.get("wms_onlineresource").split('?')[0])
         self.txtMetadataWmsWebWmsSrs.setText(ms_map.web.metadata.get("wms_srs"))
         self.txtMetadataWmsWebWmsAttrbutionOnlineresource.setText(ms_map.web.metadata.get("wms_attribution_onlineresource"))
         self.txtMetadataWmsWebWmsAttributionTitle.setText(ms_map.web.metadata.get("wms_attribution_title"))
@@ -285,7 +298,8 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         
         self.txtMetadataWfsWebWfsEnableRequest.setText(ms_map.web.metadata.get("wfs_enable_request"))
         self.txtMetadataWfsWebWfsTitle.setText(ms_map.web.metadata.get("wfs_title"))
-        self.txtMetadataWfsWebWfsOnlineresource.setText(ms_map.web.metadata.get("wfs_onlineresource").split('?')[0])
+        if ms_map.web.metadata.get("wfs_onlineresource") is not None:
+            self.txtMetadataWfsWebWfsOnlineresource.setText(ms_map.web.metadata.get("wfs_onlineresource").split('?')[0])
         self.txtMetadataWfsWebWfsAbstract.setText(ms_map.web.metadata.get("wfs_abstract"))
         self.txtMetadataWfsWebWfsAccessconstraints.setText(ms_map.web.metadata.get("wfs_accessconstraints"))
         self.txtMetadataWfsWebWfsEncoding.setText(ms_map.web.metadata.get("wfs_encoding"))
@@ -297,6 +311,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         self.txtMetadataWfsWebWfsMaxfeatures.setText(ms_map.web.metadata.get("wfs_maxfeatures"))
         self.txtMetadataWfsWebWfsServiceOnlineresource.setText(ms_map.web.metadata.get("wfs_service_onlineresource"))
         self.txtMetadataWfsWebWfsNamespaceUri.setText(ms_map.web.metadata.get("wfs_namespace_uri"))
+        self.txtMetadataOwsOwsGetFeatureFormatList.setText(ms_map.web.metadata.get("wfs_getfeature_formatlist"))
         
         self.txtMetadataWcsWebWcsEnableRequest.setText(ms_map.web.metadata.get("wcs_enable_request"))
         self.txtMetadataWcsWebWcsLabel.setText(ms_map.web.metadata.get("wcs_label"))
@@ -422,7 +437,29 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             
         if self.txtTmplFooterPath.text() != "":
             ms_map.web.footer = _toUtf8( self.txtTmplFooterPath.text() )
-
+        
+        # outputformat node
+        if self.txtOutputFormatName_1.text() != "":
+            ms_map.outputformat.name = self.txtOutputFormatName_1.text()
+        if self.txtOutputFormatDriver_1.text() != "":
+            ms_map.outputformat.driver = self.txtOutputFormatDriver_1.text()
+        if self.txtOutputFormatMimetype_1.text() != "":
+            ms_map.outputformat.mimetype = self.txtOutputFormatMimetype_1.text()
+        if self.txtOutputFormatExtension_1.text() != "":
+            ms_map.outputformat.extension = self.txtOutputFormatExtension_1.text()
+        if self.txtOutputFormatImageMode_1.text() != "":
+            ms_map.outputformat.imagemode = self.txtOutputFormatImageMode_1.text()
+        if self.txtOutputFormatTransparent_1.text() != "":
+            ms_map.outputformat.transparent = self.txtOutputFormatTransparent_1.text()
+        if self.txtOutputFormatFormatOption_1_1.text() != "":
+            ms_map.outputformat.formatoptions = self.txtOutputFormatFormatOption_1_1.text()
+        if self.txtOutputFormatFormatOption_2_1.text() != "":
+            ms_map.outputformat.formatoptions = self.txtOutputFormatFormatOption_2_1.text()
+        if self.txtOutputFormatFormatOption_3_1.text() != "":
+            ms_map.outputformat.formatoptions = self.txtOutputFormatFormatOption_3_1.text()
+        if self.txtOutputFormatFormatOption_4_1.text() != "":
+            ms_map.outputformat.formatoptions = self.txtOutputFormatFormatOption_4_1.text()
+            
         # OWS metadata
         if self.txtMetadataOwsOwsTitle.text() != "":
             ms_map.setMetaData( "ows_title", self.txtMetadataOwsOwsTitle.text() )
