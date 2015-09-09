@@ -30,6 +30,7 @@ from PyQt4 import QtGui
 from .ui.interface import Ui_MapfileExportDlg
 import mapscript
 import re
+from mapscript import MS_IMAGEMODE_RGB
 
 _toUtf8 = lambda s: unicode(s).encode('utf8')
 
@@ -64,6 +65,17 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         "jpeg" : 2,
         "svg" : 3,
         "GTiff" : 4
+    }
+    
+    outputFormatOptionMap = {
+        "RGB" : mapscript.MS_IMAGEMODE_RGB,
+        "RGBA" : mapscript.MS_IMAGEMODE_RGBA,
+        "BYTE" : mapscript.MS_IMAGEMODE_BYTE,
+        "FEATURE" : mapscript.MS_IMAGEMODE_FEATURE,
+        "INT16" : mapscript.MS_IMAGEMODE_INT16,
+        "NULL" : mapscript.MS_IMAGEMODE_NULL,
+        "PC256" : mapscript.MS_IMAGEMODE_PC256,
+        "FLOAT32" : mapscript.MS_IMAGEMODE_FLOAT32
     }
     
     PROJ_LIB = "PROJ_LIB"
@@ -134,6 +146,15 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
 
         # fill the image format combo
         self.cmbGeneralMapImageType.addItems( ["png", "gif", "jpeg", "svg", "GTiff"] )
+        
+        self.cmbOutputFormatImageMode_1.addItems(["", "RBG", "RBGA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
+        self.cmbOutputFormatImageMode_2.addItems(["", "RBG", "RBGA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
+        self.cmbOutputFormatImageMode_3.addItems(["", "RBG", "RBGA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
+        self.cmbOutputFormatImageMode_4.addItems(["", "RBG", "RBGA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
+        self.cmbOutputFormatTransparent_1.addItems(["", "TRUE", "FALSE"])
+        self.cmbOutputFormatTransparent_2.addItems(["", "TRUE", "FALSE"])
+        self.cmbOutputFormatTransparent_3.addItems(["", "TRUE", "FALSE"])
+        self.cmbOutputFormatTransparent_4.addItems(["", "TRUE", "FALSE"])
 
         QObject.connect( self.btnChooseFile, SIGNAL("clicked()"), self.selectMapFile )
         QObject.connect( self.toolButtonImportMapFile, SIGNAL("clicked()"), self.importFromMapfile )
@@ -437,28 +458,39 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             
         if self.txtTmplFooterPath.text() != "":
             ms_map.web.footer = _toUtf8( self.txtTmplFooterPath.text() )
+            
+        if self.txtGeneralMapMaxSize.text() != "":
+            ms_map.maxsize = int(self.txtGeneralMapMaxSize.text())
         
         # outputformat node
+        outputformat1 = ms_map.getOutputFormatByName(ms_map.imagetype)
+#         outputformat2 = copy.deepcopy(outputformat1)
+#         outputformat2.name = "out2"
         if self.txtOutputFormatName_1.text() != "":
-            ms_map.outputformat.name = self.txtOutputFormatName_1.text()
-        if self.txtOutputFormatDriver_1.text() != "":
-            ms_map.outputformat.driver = self.txtOutputFormatDriver_1.text()
-        if self.txtOutputFormatMimetype_1.text() != "":
-            ms_map.outputformat.mimetype = self.txtOutputFormatMimetype_1.text()
-        if self.txtOutputFormatExtension_1.text() != "":
-            ms_map.outputformat.extension = self.txtOutputFormatExtension_1.text()
-        if self.txtOutputFormatImageMode_1.text() != "":
-            ms_map.outputformat.imagemode = self.txtOutputFormatImageMode_1.text()
-        if self.txtOutputFormatTransparent_1.text() != "":
-            ms_map.outputformat.transparent = self.txtOutputFormatTransparent_1.text()
-        if self.txtOutputFormatFormatOption_1_1.text() != "":
-            ms_map.outputformat.formatoptions = self.txtOutputFormatFormatOption_1_1.text()
-        if self.txtOutputFormatFormatOption_2_1.text() != "":
-            ms_map.outputformat.formatoptions = self.txtOutputFormatFormatOption_2_1.text()
-        if self.txtOutputFormatFormatOption_3_1.text() != "":
-            ms_map.outputformat.formatoptions = self.txtOutputFormatFormatOption_3_1.text()
-        if self.txtOutputFormatFormatOption_4_1.text() != "":
-            ms_map.outputformat.formatoptions = self.txtOutputFormatFormatOption_4_1.text()
+            outputformat1.name = self.txtOutputFormatName_1.text()
+#         if self.txtOutputFormatDriver_1.text() != "":
+#             outputformat1.driver = self.txtOutputFormatDriver_1.text()
+#         if self.txtOutputFormatMimetype_1.text() != "":
+#             outputformat1.mimetype = self.txtOutputFormatMimetype_1.text()
+#         if self.txtOutputFormatExtension_1.text() != "":
+#             outputformat1.extension = self.txtOutputFormatExtension_1.text()
+#         if self.txtOutputFormatImageMode_1.text() != "":
+#             outputformat1.imagemode = outputFormatOptionMap.get(self.txtOutputFormatImageMode_1.text())
+#         if self.txtOutputFormatTransparent_1.text() != "":
+#             if self.txtOutputFormatTransparent_1.text() == "TRUE":
+#                 outputformat1.transparent = mapscript.MS_TRUE
+#             if self.txtOutputFormatTransparent_1.text() == "FALSE":
+#                 outputformat1.transparent = mapscript.MS_FALSE
+#         if self.txtOutputFormatFormatOption_1_1.text() != "" and self.txtOutputFormatFormatOptionValue_1_1.text() != "":
+#             outputformat1.setOption(self.txtOutputFormatFormatOption_1_1.text(), self.txtOutputFormatFormatOptionValue_1_1.text())
+#         if self.txtOutputFormatFormatOption_2_1.text() != "" and self.txtOutputFormatFormatOptionValue_2_1.text() != "":
+#             outputformat1.setOption(self.txtOutputFormatFormatOption_2_1.text(), self.txtOutputFormatFormatOptionValue_2_1.text())
+#         if self.txtOutputFormatFormatOption_3_1.text() != "" and self.txtOutputFormatFormatOptionValue_3_1.text() != "":
+#             outputformat1.setOption(self.txtOutputFormatFormatOption_3_1.text(), self.txtOutputFormatFormatOptionValue_3_1.text())
+#         if self.txtOutputFormatFormatOption_4_1.text() != "" and self.txtOutputFormatFormatOptionValue_4_1.text() != "":
+#             outputformat1.setOption(self.txtOutputFormatFormatOption_4_1.text(), self.txtOutputFormatFormatOptionValue_4_1.text())
+        ms_map.appendOutputFormat(outputformat1)
+#         ms_map.appendOutputFormat(outputformat2)
             
         # OWS metadata
         if self.txtMetadataOwsOwsTitle.text() != "":
