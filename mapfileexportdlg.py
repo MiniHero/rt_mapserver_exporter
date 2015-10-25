@@ -58,6 +58,11 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         True : mapscript.MS_TRUE,
         False : mapscript.MS_FALSE
     }
+    
+    trueFalseStringMap = {
+        "TRUE" : mapscript.MS_TRUE,
+        "FALSE" : mapscript.MS_FALSE
+    }
 
     imageTypeCmbMap = {
         "png" : 0,
@@ -68,8 +73,8 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
     }
     
     outputFormatOptionMap = {
-        "RGB" : mapscript.MS_IMAGEMODE_RGB,
-        "RGBA" : mapscript.MS_IMAGEMODE_RGBA,
+        "RBG" : mapscript.MS_IMAGEMODE_RGB,
+        "RBGA" : mapscript.MS_IMAGEMODE_RGBA,
         "BYTE" : mapscript.MS_IMAGEMODE_BYTE,
         "FEATURE" : mapscript.MS_IMAGEMODE_FEATURE,
         "INT16" : mapscript.MS_IMAGEMODE_INT16,
@@ -463,34 +468,31 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             ms_map.maxsize = int(self.txtGeneralMapMaxSize.text())
         
         # outputformat node
-        outputformat1 = ms_map.getOutputFormatByName(ms_map.imagetype)
-#         outputformat2 = copy.deepcopy(outputformat1)
-#         outputformat2.name = "out2"
+        outputformat1 = mapscript.outputFormatObj('AGG/PNG', 'myPNG')
+        outputformat1.inmapfile = mapscript.MS_TRUE
+        
         if self.txtOutputFormatName_1.text() != "":
             outputformat1.name = self.txtOutputFormatName_1.text()
-#         if self.txtOutputFormatDriver_1.text() != "":
-#             outputformat1.driver = self.txtOutputFormatDriver_1.text()
-#         if self.txtOutputFormatMimetype_1.text() != "":
-#             outputformat1.mimetype = self.txtOutputFormatMimetype_1.text()
-#         if self.txtOutputFormatExtension_1.text() != "":
-#             outputformat1.extension = self.txtOutputFormatExtension_1.text()
-#         if self.txtOutputFormatImageMode_1.text() != "":
-#             outputformat1.imagemode = outputFormatOptionMap.get(self.txtOutputFormatImageMode_1.text())
-#         if self.txtOutputFormatTransparent_1.text() != "":
-#             if self.txtOutputFormatTransparent_1.text() == "TRUE":
-#                 outputformat1.transparent = mapscript.MS_TRUE
-#             if self.txtOutputFormatTransparent_1.text() == "FALSE":
-#                 outputformat1.transparent = mapscript.MS_FALSE
-#         if self.txtOutputFormatFormatOption_1_1.text() != "" and self.txtOutputFormatFormatOptionValue_1_1.text() != "":
-#             outputformat1.setOption(self.txtOutputFormatFormatOption_1_1.text(), self.txtOutputFormatFormatOptionValue_1_1.text())
-#         if self.txtOutputFormatFormatOption_2_1.text() != "" and self.txtOutputFormatFormatOptionValue_2_1.text() != "":
-#             outputformat1.setOption(self.txtOutputFormatFormatOption_2_1.text(), self.txtOutputFormatFormatOptionValue_2_1.text())
-#         if self.txtOutputFormatFormatOption_3_1.text() != "" and self.txtOutputFormatFormatOptionValue_3_1.text() != "":
-#             outputformat1.setOption(self.txtOutputFormatFormatOption_3_1.text(), self.txtOutputFormatFormatOptionValue_3_1.text())
-#         if self.txtOutputFormatFormatOption_4_1.text() != "" and self.txtOutputFormatFormatOptionValue_4_1.text() != "":
-#             outputformat1.setOption(self.txtOutputFormatFormatOption_4_1.text(), self.txtOutputFormatFormatOptionValue_4_1.text())
+        if self.txtOutputFormatDriver_1.text() != "":
+            outputformat1.driver = self.txtOutputFormatDriver_1.text()
+        if self.txtOutputFormatMimetype_1.text() != "":
+            outputformat1.mimetype = self.txtOutputFormatMimetype_1.text()
+        if self.txtOutputFormatExtension_1.text() != "":
+            outputformat1.extension = self.txtOutputFormatExtension_1.text()
+        if self.cmbOutputFormatImageMode_1.currentText() != "":
+            outputformat1.imagemode = self.outputFormatOptionMap.get(_toUtf8(self.cmbOutputFormatImageMode_1.currentText()))
+        if self.cmbOutputFormatTransparent_1.currentText() != "":
+            outputformat1.transparent = self.trueFalseStringMap.get(_toUtf8(self.cmbOutputFormatTransparent_1.currentText()))
+            
+#         outputformat1.setOption("A", "B")
+#         if self.txtOutputFormatFormatOptionKey_2_1.text() != "" and self.txtOutputFormatFormatOptionValue_2_1.text() != "":
+#             outputformat1.setOption(self.txtOutputFormatFormatOptionKey_2_1.text(), self.txtOutputFormatFormatOptionValue_2_1.text())
+#         if self.txtOutputFormatFormatOptionKey_3_1.text() != "" and self.txtOutputFormatFormatOptionValue_3_1.text() != "":
+#             outputformat1.setOption(self.txtOutputFormatFormatOptionKey_3_1.text(), self.txtOutputFormatFormatOptionValue_3_1.text())
+#         if self.txtOutputFormatFormatOptionKey_4_1.text() != "" and self.txtOutputFormatFormatOptionValue_4_1.text() != "":
+#             outputformat1.setOption(self.txtOutputFormatFormatOptionKey_4_1.text(), self.txtOutputFormatFormatOptionValue_4_1.text())
+        outputformat1.formatoptions  =""
         ms_map.appendOutputFormat(outputformat1)
-#         ms_map.appendOutputFormat(outputformat2)
             
         # OWS metadata
         if self.txtMetadataOwsOwsTitle.text() != "":

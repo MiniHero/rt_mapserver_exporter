@@ -1317,6 +1317,12 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
             <item row="6" column="1">
              <widget class="QLineEdit" name="txtMetadataOwsWebOwsAllowedIpList"/>
             </item>
+            <item row="6" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsDeniedIpList"/>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsSchemasLocation"/>
+            </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_42">
               <property name="text">
@@ -1324,23 +1330,10 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="1">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsSchemasLocation"/>
-            </item>
-            <item row="6" column="3">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsDeniedIpList"/>
-            </item>
             <item row="6" column="2">
              <widget class="QLabel" name="label_23">
               <property name="text">
                <string>ows_denied_ip_list</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_22">
-              <property name="text">
-               <string>ows_allowed_ip_list</string>
               </property>
              </widget>
             </item>
@@ -1351,8 +1344,18 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
               </property>
              </widget>
             </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_22">
+              <property name="text">
+               <string>ows_allowed_ip_list</string>
+              </property>
+             </widget>
+            </item>
             <item row="8" column="3">
              <widget class="QLineEdit" name="txtMetadataOwsWebOwsSldEnabled"/>
+            </item>
+            <item row="7" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsUpdatesequence"/>
             </item>
             <item row="7" column="2">
              <widget class="QLabel" name="label_48">
@@ -1361,9 +1364,6 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="3">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsUpdatesequence"/>
-            </item>
             <item row="3" column="1">
              <widget class="QLineEdit" name="txtMetadataOwsOwsTitle">
               <property name="text">
@@ -1371,17 +1371,17 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="2">
-             <widget class="QLabel" name="label_57">
-              <property name="text">
-               <string>ows_getfeature_formatlist</string>
-              </property>
-             </widget>
-            </item>
             <item row="4" column="3">
              <widget class="QLineEdit" name="txtMetadataOwsOwsGetFeatureFormatList">
               <property name="text">
                <string>gml,geojson,jpeg</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLabel" name="label_57">
+              <property name="text">
+               <string>ows_getfeature_formatlist</string>
               </property>
              </widget>
             </item>
