@@ -181,11 +181,15 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         if self.checkBoxOws.isChecked():
             self.groupBoxMetadataOws.setEnabled(True)
             self.txtMetadataOwsOwsEnableRequest.setText(defaultEnableRequest)
+            self.txtMetadataOwsGmlFeatureid.setText("gid")
+            self.txtMetadataOwsGmlIncludeItems.setText("all")
             self.txtMetadataOwsOwsTitle.setText(defaultTitle)
             self.txtMetadataOwsOwsOnlineResource.setText(defaultOnlineResource)
             self.txtMetadataOwsOwsSrs.setText(' '.join(srsList))
         else:
             self.txtMetadataOwsOwsEnableRequest.setText("")
+            self.txtMetadataOwsGmlFeatureid.setText("")
+            self.txtMetadataOwsGmlIncludeItems.setText("")
             self.txtMetadataOwsOwsTitle.setText("")
             self.txtMetadataOwsOwsOnlineResource.setText("")
             self.txtMetadataOwsOwsSrs.setText("")
@@ -491,7 +495,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
 #             outputformat1.setOption(self.txtOutputFormatFormatOptionKey_3_1.text(), self.txtOutputFormatFormatOptionValue_3_1.text())
 #         if self.txtOutputFormatFormatOptionKey_4_1.text() != "" and self.txtOutputFormatFormatOptionValue_4_1.text() != "":
 #             outputformat1.setOption(self.txtOutputFormatFormatOptionKey_4_1.text(), self.txtOutputFormatFormatOptionValue_4_1.text())
-        outputformat1.formatoptions  =""
+#         outputformat1.formatoptions  =""
         ms_map.appendOutputFormat(outputformat1)
             
         # OWS metadata
@@ -510,6 +514,10 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             
         if self.txtMetadataOwsOwsEnableRequest.text() != "":
             ms_map.setMetaData( "ows_enable_request", self.txtMetadataOwsOwsEnableRequest.text() )
+        if self.txtMetadataOwsGmlFeatureid.text() != "":
+            ms_map.setMetaData( "gml_featureid", self.txtMetadataOwsGmlFeatureid.text() )
+        if self.txtMetadataOwsGmlIncludeItems.text() != "":
+            ms_map.setMetaData( "gml_include_items", self.txtMetadataOwsGmlIncludeItems.text() )
         if self.txtMetadataWmsWebWmsEnableRequest.text() != "":
             ms_map.setMetaData( "wms_enable_request", self.txtMetadataWmsWebWmsEnableRequest.text() )
         if self.txtMetadataWfsWebWfsEnableRequest.text() != "":

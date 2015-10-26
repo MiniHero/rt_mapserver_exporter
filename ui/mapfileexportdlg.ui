@@ -34,7 +34,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -1238,6 +1238,13 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
             <string>Web</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_9">
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_72">
+              <property name="text">
+               <string>gml_featureid</string>
+              </property>
+             </widget>
+            </item>
             <item row="3" column="2">
              <widget class="QLabel" name="label_6">
               <property name="text">
@@ -1245,17 +1252,17 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="1">
+            <item row="9" column="1">
              <widget class="QLineEdit" name="txtMetadataOwsWebOwsHttpMaxAge"/>
             </item>
-            <item row="8" column="0">
+            <item row="9" column="0">
              <widget class="QLabel" name="label_70">
               <property name="text">
                <string>ows_http_max_age</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
+            <item row="8" column="0">
              <widget class="QLabel" name="label_49">
               <property name="text">
                <string>ows_schemas_location</string>
@@ -1276,14 +1283,17 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
+            <item row="1" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsGmlFeatureid"/>
+            </item>
+            <item row="6" column="0">
              <widget class="QLabel" name="label_8">
               <property name="text">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Optional&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="2">
+            <item row="9" column="2">
              <widget class="QLabel" name="label_69">
               <property name="text">
                <string>ows_sld_enabled</string>
@@ -1314,28 +1324,14 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsAllowedIpList"/>
-            </item>
-            <item row="6" column="3">
+            <item row="7" column="3">
              <widget class="QLineEdit" name="txtMetadataOwsWebOwsDeniedIpList"/>
             </item>
             <item row="7" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsAllowedIpList"/>
+            </item>
+            <item row="8" column="1">
              <widget class="QLineEdit" name="txtMetadataOwsWebOwsSchemasLocation"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_42">
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recommmended&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="2">
-             <widget class="QLabel" name="label_23">
-              <property name="text">
-               <string>ows_denied_ip_list</string>
-              </property>
-             </widget>
             </item>
             <item row="1" column="1">
              <widget class="QLineEdit" name="txtMetadataOwsOwsEnableRequest">
@@ -1344,7 +1340,24 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="0">
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_42">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recommmended&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QLabel" name="label_23">
+              <property name="text">
+               <string>ows_denied_ip_list</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="3">
+             <widget class="QLineEdit" name="txtMetadataOwsWebOwsSldEnabled"/>
+            </item>
+            <item row="7" column="0">
              <widget class="QLabel" name="label_22">
               <property name="text">
                <string>ows_allowed_ip_list</string>
@@ -1352,22 +1365,19 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
              </widget>
             </item>
             <item row="8" column="3">
-             <widget class="QLineEdit" name="txtMetadataOwsWebOwsSldEnabled"/>
-            </item>
-            <item row="7" column="3">
              <widget class="QLineEdit" name="txtMetadataOwsWebOwsUpdatesequence"/>
-            </item>
-            <item row="7" column="2">
-             <widget class="QLabel" name="label_48">
-              <property name="text">
-               <string>ows_updatesequence</string>
-              </property>
-             </widget>
             </item>
             <item row="3" column="1">
              <widget class="QLineEdit" name="txtMetadataOwsOwsTitle">
               <property name="text">
                <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QLabel" name="label_48">
+              <property name="text">
+               <string>ows_updatesequence</string>
               </property>
              </widget>
             </item>
@@ -1382,6 +1392,16 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
              <widget class="QLabel" name="label_57">
               <property name="text">
                <string>ows_getfeature_formatlist</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLineEdit" name="txtMetadataOwsGmlIncludeItems"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_73">
+              <property name="text">
+               <string>gml_include_items</string>
               </property>
              </widget>
             </item>
