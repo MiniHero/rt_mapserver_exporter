@@ -31,6 +31,9 @@ from .ui.interface import Ui_MapfileExportDlg
 import mapscript
 import re
 from mapscript import MS_IMAGEMODE_RGB
+from osgeo._ogr import Layer_Intersection
+from decimal import Decimal
+from owslib.csw import outputformat
 
 _toUtf8 = lambda s: unicode(s).encode('utf8')
 
@@ -63,6 +66,24 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         "TRUE" : mapscript.MS_TRUE,
         "FALSE" : mapscript.MS_FALSE
     }
+    
+    labelTypeMap = {
+        "TRUETYPE" : mapscript.MS_TRUETYPE,
+        "BITMAP" : mapscript.MS_BITMAP
+    }
+    
+    labelPositionMap = {
+        "AUTO" : mapscript.MS_AUTO,
+        "UL" : mapscript.MS_UL,
+        "UC" : mapscript.MS_UC,
+        "UR" : mapscript.MS_UR,
+        "CL" : mapscript.MS_CL,
+        "CC" : mapscript.MS_CC,
+        "CR" : mapscript.MS_CR,
+        "LL" : mapscript.MS_LL,
+        "LC" : mapscript.MS_LC,
+        "LR" : mapscript.MS_LR
+    }
 
     imageTypeCmbMap = {
         "png" : 0,
@@ -82,6 +103,24 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         "PC256" : mapscript.MS_IMAGEMODE_PC256,
         "FLOAT32" : mapscript.MS_IMAGEMODE_FLOAT32
     }
+    
+#     map1 = [1,2,3]
+#     layers_map = [self.groupBoxLabelsLayer_1, self.groupBoxLabelsLayer_2, self.groupBoxLabelsLayer_3, self.groupBoxLabelsLayer_4]
+#     layer_checkboxes_map = [self.checkBoxLayer_1, self.checkBoxLayer_2, self.checkBoxLayer_3, self.checkBoxLayer_4]
+    
+    #     layersMap = {
+#         0 : self.groupBoxLabelsLayer_1,
+#         1 : groupBoxLabelsLayer_2,
+#         2 : groupBoxLabelsLayer_3,
+#         3 : groupBoxLabelsLayer_4
+#     }
+#     
+#     layerCheckboxesMap = {
+#         0 : self.checkBoxLayer_1,
+#         1 : self.checkBoxLayer_2,
+#         2 : self.checkBoxLayer_3,
+#         3 : self.checkBoxLayer_4
+#     }
     
     PROJ_LIB = "PROJ_LIB"
     MS_ERRORFILE = "MS_ERRORFILE"
@@ -160,6 +199,26 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         self.cmbOutputFormatTransparent_2.addItems(["", "TRUE", "FALSE"])
         self.cmbOutputFormatTransparent_3.addItems(["", "TRUE", "FALSE"])
         self.cmbOutputFormatTransparent_4.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerAntialias_1.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerAntialias_2.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerAntialias_3.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerAntialias_4.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerType_1.addItems(["", "BITMAP", "TRUETYPE"])
+        self.cmbLabelsLayerType_2.addItems(["", "BITMAP", "TRUETYPE"])
+        self.cmbLabelsLayerType_3.addItems(["", "BITMAP", "TRUETYPE"])
+        self.cmbLabelsLayerType_4.addItems(["", "BITMAP", "TRUETYPE"])
+        self.cmbLabelsLayerPosition_1.addItems(["", "AUTO", "UL", "UC", "UR", "CL", "CC", "CR", "LL", "LC", "LR"])
+        self.cmbLabelsLayerPosition_2.addItems(["", "AUTO", "UL", "UC", "UR", "CL", "CC", "CR", "LL", "LC", "LR"])
+        self.cmbLabelsLayerPosition_3.addItems(["", "AUTO", "UL", "UC", "UR", "CL", "CC", "CR", "LL", "LC", "LR"])
+        self.cmbLabelsLayerPosition_4.addItems(["", "AUTO", "UL", "UC", "UR", "CL", "CC", "CR", "LL", "LC", "LR"])
+        self.cmbLabelsLayerPartials_1.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerPartials_2.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerPartials_3.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerPartials_4.addItems(["", "TRUE", "FALSE"])
+        self.cmbLabelsLayerStyleGeoTransform_1.addItems(["", "labelpnt", "labelpoly"])
+        self.cmbLabelsLayerStyleGeoTransform_2.addItems(["", "labelpnt", "labelpoly"])
+        self.cmbLabelsLayerStyleGeoTransform_3.addItems(["", "labelpnt", "labelpoly"])
+        self.cmbLabelsLayerStyleGeoTransform_4.addItems(["", "labelpnt", "labelpoly"])
 
         QObject.connect( self.btnChooseFile, SIGNAL("clicked()"), self.selectMapFile )
         QObject.connect( self.toolButtonImportMapFile, SIGNAL("clicked()"), self.importFromMapfile )
@@ -175,6 +234,15 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         self.checkBoxWms.stateChanged.connect(self.toggleWmsMetadata)
         self.checkBoxWfs.stateChanged.connect(self.toggleWfsMetadata)
         self.checkBoxWcs.stateChanged.connect(self.toggleWcsMetadata)
+        
+        self.groupBoxLabelsLayer_1.setEnabled(False)
+        self.groupBoxLabelsLayer_2.setEnabled(False)
+        self.groupBoxLabelsLayer_3.setEnabled(False)
+        self.groupBoxLabelsLayer_4.setEnabled(False)
+        self.checkBoxLayer_1.stateChanged.connect(self.toggleLayer1)
+        self.checkBoxLayer_2.stateChanged.connect(self.toggleLayer2)
+        self.checkBoxLayer_3.stateChanged.connect(self.toggleLayer3)
+        self.checkBoxLayer_4.stateChanged.connect(self.toggleLayer4)
         
 
     def toggleOwsMetadata(self):
@@ -230,6 +298,30 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         else:
             self.txtMetadataWcsWebWcsEnableRequest.setText("")
             self.groupBoxMetadataWcs.setEnabled(False)
+            
+    def toggleLayer1(self):
+        if self.checkBoxLayer_1.isChecked():
+            self.groupBoxLabelsLayer_1.setEnabled(True)
+        else:
+            self.groupBoxLabelsLayer_1.setEnabled(False)
+            
+    def toggleLayer2(self):
+        if self.checkBoxLayer_2.isChecked():
+            self.groupBoxLabelsLayer_2.setEnabled(True)
+        else:
+            self.groupBoxLabelsLayer_2.setEnabled(False)
+            
+    def toggleLayer3(self):
+        if self.checkBoxLayer_3.isChecked():
+            self.groupBoxLabelsLayer_3.setEnabled(True)
+        else:
+            self.groupBoxLabelsLayer_3.setEnabled(False)
+            
+    def toggleLayer4(self):
+        if self.checkBoxLayer_4.isChecked():
+            self.groupBoxLabelsLayer_4.setEnabled(True)
+        else:
+            self.groupBoxLabelsLayer_4.setEnabled(False)
             
     def selectMapFile(self):
         # retrieve the last used map file path
@@ -472,31 +564,105 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             ms_map.maxsize = int(self.txtGeneralMapMaxSize.text())
         
         # outputformat node
-        outputformat1 = mapscript.outputFormatObj('AGG/PNG', 'myPNG')
-        outputformat1.inmapfile = mapscript.MS_TRUE
-        
         if self.txtOutputFormatName_1.text() != "":
+#             outputformat1 = mapscript.outputFormatObj('AGG/PNG', 'myPNG')
+            outputformat1 = ms_map.getOutputFormatByName(_toUtf8( self.cmbGeneralMapImageType.currentText() ))
+            outputformat1.inmapfile = mapscript.MS_TRUE
             outputformat1.name = self.txtOutputFormatName_1.text()
-        if self.txtOutputFormatDriver_1.text() != "":
-            outputformat1.driver = self.txtOutputFormatDriver_1.text()
-        if self.txtOutputFormatMimetype_1.text() != "":
-            outputformat1.mimetype = self.txtOutputFormatMimetype_1.text()
-        if self.txtOutputFormatExtension_1.text() != "":
-            outputformat1.extension = self.txtOutputFormatExtension_1.text()
-        if self.cmbOutputFormatImageMode_1.currentText() != "":
-            outputformat1.imagemode = self.outputFormatOptionMap.get(_toUtf8(self.cmbOutputFormatImageMode_1.currentText()))
-        if self.cmbOutputFormatTransparent_1.currentText() != "":
-            outputformat1.transparent = self.trueFalseStringMap.get(_toUtf8(self.cmbOutputFormatTransparent_1.currentText()))
+            if self.txtOutputFormatDriver_1.text() != "":
+                outputformat1.driver = self.txtOutputFormatDriver_1.text()
+            if self.txtOutputFormatMimetype_1.text() != "":
+                outputformat1.mimetype = self.txtOutputFormatMimetype_1.text()
+            if self.txtOutputFormatExtension_1.text() != "":
+                outputformat1.extension = self.txtOutputFormatExtension_1.text()
+            if self.cmbOutputFormatImageMode_1.currentText() != "":
+                outputformat1.imagemode = self.outputFormatOptionMap.get(_toUtf8(self.cmbOutputFormatImageMode_1.currentText()))
+            if self.cmbOutputFormatTransparent_1.currentText() != "":
+                outputformat1.transparent = self.trueFalseStringMap.get(_toUtf8(self.cmbOutputFormatTransparent_1.currentText()))
+            if self.txtOutputFormatFormatOptionKey_1_1.text() != "" and self.txtOutputFormatFormatOptionValue_1_1.text() != "":
+                outputformat1.setOption(str(self.txtOutputFormatFormatOptionKey_1_1.text()), str(self.txtOutputFormatFormatOptionValue_1_1.text()))
+            if self.txtOutputFormatFormatOptionKey_2_1.text() != "" and self.txtOutputFormatFormatOptionValue_2_1.text() != "":
+                outputformat1.setOption(str(self.txtOutputFormatFormatOptionKey_2_1.text()), str(self.txtOutputFormatFormatOptionValue_2_1.text()))
+            if self.txtOutputFormatFormatOptionKey_3_1.text() != "" and self.txtOutputFormatFormatOptionValue_3_1.text() != "":
+                outputformat1.setOption(str(self.txtOutputFormatFormatOptionKey_3_1.text()), str(self.txtOutputFormatFormatOptionValue_3_1.text()))
+            if self.txtOutputFormatFormatOptionKey_4_1.text() != "" and self.txtOutputFormatFormatOptionValue_4_1.text() != "":
+                outputformat1.setOption(str(self.txtOutputFormatFormatOptionKey_4_1.text()), str(self.txtOutputFormatFormatOptionValue_4_1.text()))
+            ms_map.appendOutputFormat(outputformat1)
+        
+        if self.txtOutputFormatName_2.text() != "":
+            outputformat2 = mapscript.outputFormatObj('AGG/PNG', self.txtOutputFormatName_2.text())
+#             outputformat1 = ms_map.getOutputFormatByName(_toUtf8( self.cmbGeneralMapImageType.currentText() ))
+            outputformat2.inmapfile = mapscript.MS_TRUE
+            outputformat2.name = self.txtOutputFormatName_2.text()
+            if self.txtOutputFormatDriver_2.text() != "":
+                outputformat2.driver = self.txtOutputFormatDriver_2.text()
+            if self.txtOutputFormatMimetype_2.text() != "":
+                outputformat2.mimetype = self.txtOutputFormatMimetype_2.text()
+            if self.txtOutputFormatExtension_2.text() != "":
+                outputformat2.extension = self.txtOutputFormatExtension_2.text()
+            if self.cmbOutputFormatImageMode_2.currentText() != "":
+                outputformat2.imagemode = self.outputFormatOptionMap.get(_toUtf8(self.cmbOutputFormatImageMode_2.currentText()))
+            if self.cmbOutputFormatTransparent_2.currentText() != "":
+                outputformat2.transparent = self.trueFalseStringMap.get(_toUtf8(self.cmbOutputFormatTransparent_2.currentText()))
+            if self.txtOutputFormatFormatOptionKey_1_2.text() != "" and self.txtOutputFormatFormatOptionValue_1_2.text() != "":
+                outputformat2.setOption(str(self.txtOutputFormatFormatOptionKey_1_2.text()), str(self.txtOutputFormatFormatOptionValue_1_2.text()))
+            if self.txtOutputFormatFormatOptionKey_2_2.text() != "" and self.txtOutputFormatFormatOptionValue_2_2.text() != "":
+                outputformat2.setOption(str(self.txtOutputFormatFormatOptionKey_2_2.text()), str(self.txtOutputFormatFormatOptionValue_2_2.text()))
+            if self.txtOutputFormatFormatOptionKey_3_2.text() != "" and self.txtOutputFormatFormatOptionValue_3_2.text() != "":
+                outputformat2.setOption(str(self.txtOutputFormatFormatOptionKey_3_2.text()), str(self.txtOutputFormatFormatOptionValue_3_2.text()))
+            if self.txtOutputFormatFormatOptionKey_4_2.text() != "" and self.txtOutputFormatFormatOptionValue_4_2.text() != "":
+                outputformat2.setOption(str(self.txtOutputFormatFormatOptionKey_4_2.text()), str(self.txtOutputFormatFormatOptionValue_4_2.text()))
+            ms_map.appendOutputFormat(outputformat2)
+        
+        if self.txtOutputFormatName_3.text() != "":
+            outputformat3 = mapscript.outputFormatObj('AGG/PNG', self.txtOutputFormatName_3.text())
+#             outputformat1 = ms_map.getOutputFormatByName(_toUtf8( self.cmbGeneralMapImageType.currentText() ))
+            outputformat3.inmapfile = mapscript.MS_TRUE
+            outputformat3.name = self.txtOutputFormatName_3.text()
+            if self.txtOutputFormatDriver_3.text() != "":
+                outputformat3.driver = self.txtOutputFormatDriver_3.text()
+            if self.txtOutputFormatMimetype_3.text() != "":
+                outputformat3.mimetype = self.txtOutputFormatMimetype_3.text()
+            if self.txtOutputFormatExtension_3.text() != "":
+                outputformat3.extension = self.txtOutputFormatExtension_3.text()
+            if self.cmbOutputFormatImageMode_3.currentText() != "":
+                outputformat3.imagemode = self.outputFormatOptionMap.get(_toUtf8(self.cmbOutputFormatImageMode_3.currentText()))
+            if self.cmbOutputFormatTransparent_3.currentText() != "":
+                outputformat3.transparent = self.trueFalseStringMap.get(_toUtf8(self.cmbOutputFormatTransparent_3.currentText()))
+            if self.txtOutputFormatFormatOptionKey_1_3.text() != "" and self.txtOutputFormatFormatOptionValue_1_3.text() != "":
+                outputformat3.setOption(str(self.txtOutputFormatFormatOptionKey_1_3.text()), str(self.txtOutputFormatFormatOptionValue_1_3.text()))
+            if self.txtOutputFormatFormatOptionKey_2_3.text() != "" and self.txtOutputFormatFormatOptionValue_2_3.text() != "":
+                outputformat3.setOption(str(self.txtOutputFormatFormatOptionKey_2_3.text()), str(self.txtOutputFormatFormatOptionValue_2_3.text()))
+            if self.txtOutputFormatFormatOptionKey_3_3.text() != "" and self.txtOutputFormatFormatOptionValue_3_3.text() != "":
+                outputformat3.setOption(str(self.txtOutputFormatFormatOptionKey_3_3.text()), str(self.txtOutputFormatFormatOptionValue_3_3.text()))
+            if self.txtOutputFormatFormatOptionKey_4_3.text() != "" and self.txtOutputFormatFormatOptionValue_4_3.text() != "":
+                outputformat3.setOption(str(self.txtOutputFormatFormatOptionKey_4_3.text()), str(self.txtOutputFormatFormatOptionValue_4_3.text()))
+            ms_map.appendOutputFormat(outputformat3)
             
-#         outputformat1.setOption("A", "B")
-#         if self.txtOutputFormatFormatOptionKey_2_1.text() != "" and self.txtOutputFormatFormatOptionValue_2_1.text() != "":
-#             outputformat1.setOption(self.txtOutputFormatFormatOptionKey_2_1.text(), self.txtOutputFormatFormatOptionValue_2_1.text())
-#         if self.txtOutputFormatFormatOptionKey_3_1.text() != "" and self.txtOutputFormatFormatOptionValue_3_1.text() != "":
-#             outputformat1.setOption(self.txtOutputFormatFormatOptionKey_3_1.text(), self.txtOutputFormatFormatOptionValue_3_1.text())
-#         if self.txtOutputFormatFormatOptionKey_4_1.text() != "" and self.txtOutputFormatFormatOptionValue_4_1.text() != "":
-#             outputformat1.setOption(self.txtOutputFormatFormatOptionKey_4_1.text(), self.txtOutputFormatFormatOptionValue_4_1.text())
-#         outputformat1.formatoptions  =""
-        ms_map.appendOutputFormat(outputformat1)
+        if self.txtOutputFormatName_4.text() != "":
+            outputformat4 = mapscript.outputFormatObj('AGG/PNG', self.txtOutputFormatName_4.text())
+#             outputformat1 = ms_map.getOutputFormatByName(_toUtf8( self.cmbGeneralMapImageType.currentText() ))
+            outputformat4.inmapfile = mapscript.MS_TRUE
+            outputformat4.name = self.txtOutputFormatName_4.text()
+            if self.txtOutputFormatDriver_4.text() != "":
+                outputformat4.driver = self.txtOutputFormatDriver_4.text()
+            if self.txtOutputFormatMimetype_4.text() != "":
+                outputformat4.mimetype = self.txtOutputFormatMimetype_4.text()
+            if self.txtOutputFormatExtension_4.text() != "":
+                outputformat4.extension = self.txtOutputFormatExtension_4.text()
+            if self.cmbOutputFormatImageMode_4.currentText() != "":
+                outputformat4.imagemode = self.outputFormatOptionMap.get(_toUtf8(self.cmbOutputFormatImageMode_4.currentText()))
+            if self.cmbOutputFormatTransparent_4.currentText() != "":
+                outputformat4.transparent = self.trueFalseStringMap.get(_toUtf8(self.cmbOutputFormatTransparent_4.currentText()))
+            if self.txtOutputFormatFormatOptionKey_1_4.text() != "" and self.txtOutputFormatFormatOptionValue_1_4.text() != "":
+                outputformat4.setOption(str(self.txtOutputFormatFormatOptionKey_1_4.text()), str(self.txtOutputFormatFormatOptionValue_1_4.text()))
+            if self.txtOutputFormatFormatOptionKey_2_4.text() != "" and self.txtOutputFormatFormatOptionValue_2_4.text() != "":
+                outputformat4.setOption(str(self.txtOutputFormatFormatOptionKey_2_4.text()), str(self.txtOutputFormatFormatOptionValue_2_4.text()))
+            if self.txtOutputFormatFormatOptionKey_3_4.text() != "" and self.txtOutputFormatFormatOptionValue_3_4.text() != "":
+                outputformat4.setOption(str(self.txtOutputFormatFormatOptionKey_3_4.text()), str(self.txtOutputFormatFormatOptionValue_3_4.text()))
+            if self.txtOutputFormatFormatOptionKey_4_4.text() != "" and self.txtOutputFormatFormatOptionValue_4_4.text() != "":
+                outputformat4.setOption(str(self.txtOutputFormatFormatOptionKey_4_4.text()), str(self.txtOutputFormatFormatOptionValue_4_4.text()))
+            ms_map.appendOutputFormat(outputformat4)
             
         # OWS metadata
         if self.txtMetadataOwsOwsTitle.text() != "":
@@ -514,10 +680,10 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             
         if self.txtMetadataOwsOwsEnableRequest.text() != "":
             ms_map.setMetaData( "ows_enable_request", self.txtMetadataOwsOwsEnableRequest.text() )
-        if self.txtMetadataOwsGmlFeatureid.text() != "":
-            ms_map.setMetaData( "gml_featureid", self.txtMetadataOwsGmlFeatureid.text() )
-        if self.txtMetadataOwsGmlIncludeItems.text() != "":
-            ms_map.setMetaData( "gml_include_items", self.txtMetadataOwsGmlIncludeItems.text() )
+#         if self.txtMetadataOwsGmlFeatureid.text() != "":
+#             ms_map.setMetaData( "gml_featureid", self.txtMetadataOwsGmlFeatureid.text() )
+#         if self.txtMetadataOwsGmlIncludeItems.text() != "":
+#             ms_map.setMetaData( "gml_include_items", self.txtMetadataOwsGmlIncludeItems.text() )
         if self.txtMetadataWmsWebWmsEnableRequest.text() != "":
             ms_map.setMetaData( "wms_enable_request", self.txtMetadataWmsWebWmsEnableRequest.text() )
         if self.txtMetadataWfsWebWfsEnableRequest.text() != "":
@@ -645,7 +811,16 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             ms_map.setMetaData( "wcs_service_onlineresource", self.txtMetadataWcsWebWcsServiceOnlineresource.text())
             
 
+        layer_index = 0
+#         
+#         layers_array = [self.groupBoxLabelsLayer_1, self.groupBoxLabelsLayer_2, self.groupBoxLabelsLayer_3, self.groupBoxLabelsLayer_4]
+#         layer_checkboxes_array = [self.checkBoxLayer_1, self.checkBoxLayer_2, self.checkBoxLayer_3, self.checkBoxLayer_4]
+        
         for layer in self.legend.layers():
+            
+#             self.groupBoxLabelsLayer_1.SetChecked(True)
+#             layers_array[layer_index].setEnabled(True)
+            layer_index += 1
             # check if layer is a supported type... seems return None if type is not supported (e.g. csv)
             if ( self.getLayerType( layer ) == None):
                 QMessageBox.warning(self, "RT MapServer Exporter", "Skipped not supported layer: %s" % layer.name())
@@ -681,6 +856,11 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
                 ms_layer.setMetaData( "wms_title", ms_layer.name )
             if self.checkBoxWfs.isChecked():
                 ms_layer.setMetaData( "wfs_title", ms_layer.name )
+                
+            if self.txtMetadataOwsGmlFeatureid.text() != "":
+                ms_layer.setMetaData( "gml_featureid", self.txtMetadataOwsGmlFeatureid.text() )
+            if self.txtMetadataOwsGmlIncludeItems.text() != "":
+                ms_layer.setMetaData( "gml_include_items", self.txtMetadataOwsGmlIncludeItems.text() )
                 
             if layer.title() != "":
                 ms_layer.setMetaData("wms_title", layer.title())
@@ -783,6 +963,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             else:
                 ms_layer.data = _toUtf8( layer.source() )
 
+
             # set layer style
             if layer.type() == QgsMapLayer.RasterLayer:
                 if hasattr(layer, 'renderer'):    # QGis >= 1.9
@@ -794,83 +975,223 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
                 ms_layer.opacity = opacity
 
             else:
-                # use a SLD file set the layer style
-                tempSldFile = QTemporaryFile("rt_mapserver_exporter-XXXXXX.sld")
-                tempSldFile.open()
-                tempSldPath = tempSldFile.fileName()
-                tempSldFile.close()
-                
-                # export the QGIS layer style to SLD file
-                errMsg, ok = layer.saveSldStyle( tempSldPath )
-                if not ok:
-                    QgsMessageLog.logMessage( errMsg, "RT MapServer Exporter" )
-                else:
-                    # set the mapserver layer style from the SLD file
-                    #QFile.copy(tempSldPath, tempSldPath+".save")
-                    #print "SLD saved file: ", tempSldPath+".save"
-                    with open( unicode(tempSldPath), 'r' ) as fin:
-                        sldContents = fin.read()
-                    if mapscript.MS_SUCCESS != ms_layer.applySLD( sldContents, ms_layer.name ):
-                        QgsMessageLog.logMessage( u"Something went wrong applying the SLD style to the layer '%s'" % ms_layer.name, "RT MapServer Exporter" )
-                    QFile.remove( tempSldPath )
+                if layer_index == 1:
+                    if self.txtLabelsLayerLabelitem_1.text() != "":
+                        ms_layer.labelitem = self.txtLabelsLayerLabelitem_1.text()
+    
+                    ms_label = mapscript.labelObj()
+    
+                    if self.cmbLabelsLayerAntialias_1.currentText() != "":
+                        ms_label.antialias = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerAntialias_1.currentText()))
+                    if self.cmbLabelsLayerType_1.currentText() != "":
+                        ms_label.type = self.labelTypeMap.get(_toUtf8(self.cmbLabelsLayerType_1.currentText()))
+                    if self.cmbLabelsLayerPosition_1.currentText() != "":
+                        ms_label.position = self.labelPositionMap.get(_toUtf8(self.cmbLabelsLayerPosition_1.currentText()))
+                    if self.cmbLabelsLayerPartials_1.currentText() != "":
+                        ms_label.partials = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerPartials_1.currentText()))
+                    if self.txtLabelsLayerColor_1.text() != "":
+                        color = [int(n) for n in self.txtLabelsLayerColor_1.text().split()]
+                        ms_label.color.setRGB( color[0], color[1], color[2] )
+                    if self.txtLabelsLayerOffset_1.text() != "":
+                        offset = [int(n) for n in self.txtLabelsLayerOffset_1.text().split()]
+                        ms_label.offsetx = offset[0]
+                        ms_label.offsety = offset[1]
+                    if self.txtLabelsLayerShadowsize_1.text() != "":
+                        shadowsize = [int(n) for n in self.txtLabelsLayerShadowsize_1.text().split()]
+                        ms_label.shadowsizex = shadowsize[0]
+                        ms_label.shadowsizey = shadowsize[1]
+                    if self.txtLabelsLayerBuffer_1.text() != "":
+                        ms_label.buffer = int(self.txtLabelsLayerBuffer_1.text())
+                    if self.txtLabelsLayerMindistance_1.text() != "":
+                        ms_label.mindistance = int(self.txtLabelsLayerMindistance_1.text())
+                    if self.txtLabelsLayerMaxlength_1.text() != "":
+                        ms_label.maxlength = int(self.txtLabelsLayerMaxlength_1.text())
+                    if self.txtLabelsLayerSize_1.text() != "":
+                        ms_label.size = float(self.txtLabelsLayerSize_1.text())
+                    if self.txtLabelsLayerFont_1.text() != "":
+                        ms_label.font = self.txtLabelsLayerFont_1.text()
+                        
+                    ms_style = mapscript.styleObj()
+                    
+                    if self.cmbLabelsLayerStyleGeoTransform_1.currentText() != "":
+                        ms_style.setGeomTransform(_toUtf8(self.cmbLabelsLayerStyleGeoTransform_1.currentText()))
+                    if self.txtLabelsLayerStyleColor_1.text() != "":
+                        style_color = [int(n) for n in self.txtLabelsLayerStyleColor_1.text().split()]
+                        ms_style.color = mapscript.colorObj()
+                        ms_style.color.setRGB(style_color[0], style_color[1], style_color[2])
+                    if self.txtLabelsLayerStyleOffset_1.text() != "":
+                        style_offset = [int(n) for n in self.txtLabelsLayerStyleOffset_1.text().split()]
+                        ms_style.offsetx = offset[0]
+                        ms_style.offsety = offset[1]
+                        
+                    ms_label.insertStyle(ms_style)
+                    ms_class = mapscript.classObj()
+                    ms_class.addLabel( ms_label )
+                    ms_layer.insertClass( ms_class )
+                    
+                if layer_index == 2:
+                    if self.txtLabelsLayerLabelitem_2.text() != "":
+                        ms_layer.labelitem = self.txtLabelsLayerLabelitem_2.text()
+    
+                    ms_label = mapscript.labelObj()
+    
+                    if self.cmbLabelsLayerAntialias_2.currentText() != "":
+                        ms_label.antialias = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerAntialias_2.currentText()))
+                    if self.cmbLabelsLayerType_2.currentText() != "":
+                        ms_label.type = self.labelTypeMap.get(_toUtf8(self.cmbLabelsLayerType_2.currentText()))
+                    if self.cmbLabelsLayerPosition_2.currentText() != "":
+                        ms_label.position = self.labelPositionMap.get(_toUtf8(self.cmbLabelsLayerPosition_2.currentText()))
+                    if self.cmbLabelsLayerPartials_2.currentText() != "":
+                        ms_label.partials = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerPartials_2.currentText()))
+                    if self.txtLabelsLayerColor_2.text() != "":
+                        color = [int(n) for n in self.txtLabelsLayerColor_2.text().split()]
+                        ms_label.color.setRGB( color[0], color[1], color[2] )
+                    if self.txtLabelsLayerOffset_2.text() != "":
+                        offset = [int(n) for n in self.txtLabelsLayerOffset_2.text().split()]
+                        ms_label.offsetx = offset[0]
+                        ms_label.offsety = offset[1]
+                    if self.txtLabelsLayerShadowsize_2.text() != "":
+                        shadowsize = [int(n) for n in self.txtLabelsLayerShadowsize_2.text().split()]
+                        ms_label.shadowsizex = shadowsize[0]
+                        ms_label.shadowsizey = shadowsize[1]
+                    if self.txtLabelsLayerBuffer_2.text() != "":
+                        ms_label.buffer = int(self.txtLabelsLayerBuffer_2.text())
+                    if self.txtLabelsLayerMindistance_2.text() != "":
+                        ms_label.mindistance = int(self.txtLabelsLayerMindistance_2.text())
+                    if self.txtLabelsLayerMaxlength_2.text() != "":
+                        ms_label.maxlength = int(self.txtLabelsLayerMaxlength_2.text())
+                    if self.txtLabelsLayerSize_2.text() != "":
+                        ms_label.size = float(self.txtLabelsLayerSize_2.text())
+                    if self.txtLabelsLayerFont_2.text() != "":
+                        ms_label.font = self.txtLabelsLayerFont_2.text()
+                        
+                    ms_style = mapscript.styleObj()
+                    
+                    if self.cmbLabelsLayerStyleGeoTransform_2.currentText() != "":
+                        ms_style.setGeomTransform(_toUtf8(self.cmbLabelsLayerStyleGeoTransform_2.currentText()))
+                    if self.txtLabelsLayerStyleColor_2.text() != "":
+                        style_color = [int(n) for n in self.txtLabelsLayerStyleColor_2.text().split()]
+                        ms_style.color = mapscript.colorObj()
+                        ms_style.color.setRGB(style_color[0], style_color[1], style_color[2])
+                    if self.txtLabelsLayerStyleOffset_2.text() != "":
+                        style_offset = [int(n) for n in self.txtLabelsLayerStyleOffset_2.text().split()]
+                        ms_style.offsetx = offset[0]
+                        ms_style.offsety = offset[1]
+                        
+                    ms_label.insertStyle(ms_style)
+                    ms_class = mapscript.classObj()
+                    ms_class.addLabel( ms_label )
+                    ms_layer.insertClass( ms_class )
+                    
+                if layer_index == 3:
+                    if self.txtLabelsLayerLabelitem_3.text() != "":
+                        ms_layer.labelitem = self.txtLabelsLayerLabelitem_3.text()
+    
+                    ms_label = mapscript.labelObj()
+    
+                    if self.cmbLabelsLayerAntialias_3.currentText() != "":
+                        ms_label.antialias = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerAntialias_3.currentText()))
+                    if self.cmbLabelsLayerType_3.currentText() != "":
+                        ms_label.type = self.labelTypeMap.get(_toUtf8(self.cmbLabelsLayerType_3.currentText()))
+                    if self.cmbLabelsLayerPosition_3.currentText() != "":
+                        ms_label.position = self.labelPositionMap.get(_toUtf8(self.cmbLabelsLayerPosition_3.currentText()))
+                    if self.cmbLabelsLayerPartials_3.currentText() != "":
+                        ms_label.partials = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerPartials_3.currentText()))
+                    if self.txtLabelsLayerColor_3.text() != "":
+                        color = [int(n) for n in self.txtLabelsLayerColor_3.text().split()]
+                        ms_label.color.setRGB( color[0], color[1], color[2] )
+                    if self.txtLabelsLayerOffset_3.text() != "":
+                        offset = [int(n) for n in self.txtLabelsLayerOffset_3.text().split()]
+                        ms_label.offsetx = offset[0]
+                        ms_label.offsety = offset[1]
+                    if self.txtLabelsLayerShadowsize_3.text() != "":
+                        shadowsize = [int(n) for n in self.txtLabelsLayerShadowsize_3.text().split()]
+                        ms_label.shadowsizex = shadowsize[0]
+                        ms_label.shadowsizey = shadowsize[1]
+                    if self.txtLabelsLayerBuffer_3.text() != "":
+                        ms_label.buffer = int(self.txtLabelsLayerBuffer_3.text())
+                    if self.txtLabelsLayerMindistance_3.text() != "":
+                        ms_label.mindistance = int(self.txtLabelsLayerMindistance_3.text())
+                    if self.txtLabelsLayerMaxlength_3.text() != "":
+                        ms_label.maxlength = int(self.txtLabelsLayerMaxlength_3.text())
+                    if self.txtLabelsLayerSize_3.text() != "":
+                        ms_label.size = float(self.txtLabelsLayerSize_3.text())
+                    if self.txtLabelsLayerFont_3.text() != "":
+                        ms_label.font = self.txtLabelsLayerFont_3.text()
+                        
+                    ms_style = mapscript.styleObj()
+                    
+                    if self.cmbLabelsLayerStyleGeoTransform_3.currentText() != "":
+                        ms_style.setGeomTransform(_toUtf8(self.cmbLabelsLayerStyleGeoTransform_3.currentText()))
+                    if self.txtLabelsLayerStyleColor_3.text() != "":
+                        style_color = [int(n) for n in self.txtLabelsLayerStyleColor_3.text().split()]
+                        ms_style.color = mapscript.colorObj()
+                        ms_style.color.setRGB(style_color[0], style_color[1], style_color[2])
+                    if self.txtLabelsLayerStyleOffset_3.text() != "":
+                        style_offset = [int(n) for n in self.txtLabelsLayerStyleOffset_3.text().split()]
+                        ms_style.offsetx = offset[0]
+                        ms_style.offsety = offset[1]
+                        
+                    ms_label.insertStyle(ms_style)
+                    ms_class = mapscript.classObj()
+                    ms_class.addLabel( ms_label )
+                    ms_layer.insertClass( ms_class )
+                    
+                if layer_index == 4:
+                    if self.txtLabelsLayerLabelitem_4.text() != "":
+                        ms_layer.labelitem = self.txtLabelsLayerLabelitem_4.text()
+    
+                    ms_label = mapscript.labelObj()
+    
+                    if self.cmbLabelsLayerAntialias_4.currentText() != "":
+                        ms_label.antialias = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerAntialias_4.currentText()))
+                    if self.cmbLabelsLayerType_4.currentText() != "":
+                        ms_label.type = self.labelTypeMap.get(_toUtf8(self.cmbLabelsLayerType_4.currentText()))
+                    if self.cmbLabelsLayerPosition_4.currentText() != "":
+                        ms_label.position = self.labelPositionMap.get(_toUtf8(self.cmbLabelsLayerPosition_4.currentText()))
+                    if self.cmbLabelsLayerPartials_4.currentText() != "":
+                        ms_label.partials = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerPartials_4.currentText()))
+                    if self.txtLabelsLayerColor_4.text() != "":
+                        color = [int(n) for n in self.txtLabelsLayerColor_4.text().split()]
+                        ms_label.color.setRGB( color[0], color[1], color[2] )
+                    if self.txtLabelsLayerOffset_4.text() != "":
+                        offset = [int(n) for n in self.txtLabelsLayerOffset_4.text().split()]
+                        ms_label.offsetx = offset[0]
+                        ms_label.offsety = offset[1]
+                    if self.txtLabelsLayerShadowsize_4.text() != "":
+                        shadowsize = [int(n) for n in self.txtLabelsLayerShadowsize_4.text().split()]
+                        ms_label.shadowsizex = shadowsize[0]
+                        ms_label.shadowsizey = shadowsize[1]
+                    if self.txtLabelsLayerBuffer_4.text() != "":
+                        ms_label.buffer = int(self.txtLabelsLayerBuffer_4.text())
+                    if self.txtLabelsLayerMindistance_4.text() != "":
+                        ms_label.mindistance = int(self.txtLabelsLayerMindistance_4.text())
+                    if self.txtLabelsLayerMaxlength_4.text() != "":
+                        ms_label.maxlength = int(self.txtLabelsLayerMaxlength_4.text())
+                    if self.txtLabelsLayerSize_4.text() != "":
+                        ms_label.size = float(self.txtLabelsLayerSize_4.text())
+                    if self.txtLabelsLayerFont_4.text() != "":
+                        ms_label.font = self.txtLabelsLayerFont_4.text()
+                        
+                    ms_style = mapscript.styleObj()
+                    
+                    if self.cmbLabelsLayerStyleGeoTransform_4.currentText() != "":
+                        ms_style.setGeomTransform(_toUtf8(self.cmbLabelsLayerStyleGeoTransform_4.currentText()))
+                    if self.txtLabelsLayerStyleColor_4.text() != "":
+                        style_color = [int(n) for n in self.txtLabelsLayerStyleColor_4.text().split()]
+                        ms_style.color = mapscript.colorObj()
+                        ms_style.color.setRGB(style_color[0], style_color[1], style_color[2])
+                    if self.txtLabelsLayerStyleOffset_4.text() != "":
+                        style_offset = [int(n) for n in self.txtLabelsLayerStyleOffset_4.text().split()]
+                        ms_style.offsetx = offset[0]
+                        ms_style.offsety = offset[1]
+                        
+                    ms_label.insertStyle(ms_style)
+                    ms_class = mapscript.classObj()
+                    ms_class.addLabel( ms_label )
+                    ms_layer.insertClass( ms_class )
 
-                    # set layer labels
-                    #XXX the following code MUST be removed when QGIS will
-                    # have SLD label support
-                    labelingEngine = self.canvas.mapRenderer().labelingEngine()
-                    if labelingEngine and labelingEngine.willUseLayer( layer ):
-                        palLayer = labelingEngine.layer( layer.id() )
-                        if palLayer.enabled:
-                            if not palLayer.isExpression:
-                                ms_layer.labelitem = _toUtf8( palLayer.fieldName )
-                            else:
-                                #XXX expressions won't be supported until
-                                # QGIS have SLD label support
-                                pass
-        
-                            if palLayer.scaleMin > 0:
-                                ms_layer.labelminscaledenom = palLayer.scaleMin
-                            if palLayer.scaleMax > 0:
-                                ms_layer.labelmaxscaledenom = palLayer.scaleMax
-        
-                            ms_label = mapscript.labelObj()
-        
-                            ms_label.type = mapscript.MS_TRUETYPE
-                            ms_label.antialias = mapscript.MS_TRUE
-        
-                            ms_label.position = self.getLabelPosition( palLayer )
-                            # TODO: convert offset to pixels
-                            ms_label.offsetx = int( palLayer.xOffset )
-                            ms_label.offsety = int( palLayer.yOffset )
-                            ms_label.angle = palLayer.angleOffset
-        
-                            # set label font name, size and color
-                            fontFamily = palLayer.textFont.family().replace(" ", "")
-                            fontStyle = palLayer.textNamedStyle.replace(" ", "")
-                            ms_label.font = _toUtf8( u"%s-%s" % (fontFamily, fontStyle) )
-                            if palLayer.textFont.pixelSize() > 0:
-                                ms_label.size = int( palLayer.textFont.pixelSize() )
-                            r,g,b,a = palLayer.textColor.getRgb()
-                            ms_label.color.setRGB( r, g, b )
-        
-                            if palLayer.fontLimitPixelSize:
-                                ms_label.minsize = palLayer.fontMinPixelSize
-                                ms_label.maxsize = palLayer.fontMaxPixelSize
-                            ms_label.wrap = _toUtf8( palLayer.wrapChar )
-        
-                            ms_label.priority = palLayer.priority
-        
-                            # TODO: convert buffer size to pixels
-                            ms_label.buffer = int( palLayer.bufferSize )
-        
-                            if int( palLayer.minFeatureSize ) > 0:
-                                # TODO: convert feature size from mm to pixels
-                                ms_label.minfeaturesize = int( palLayer.minFeatureSize )
-        
-                            ms_class = mapscript.classObj()
-                            ms_class.addLabel( ms_label )
-                            ms_layer.insertClass( ms_class )
-
+        layer_index = 0
 
         # save the map file now!
         if mapscript.MS_SUCCESS != ms_map.save( _toUtf8( self.txtMapFilePath.text() )     ):
