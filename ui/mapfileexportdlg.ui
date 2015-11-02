@@ -34,7 +34,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -2409,7 +2409,7 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-21</y>
             <width>744</width>
             <height>700</height>
            </rect>
@@ -3478,38 +3478,141 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
   <tabstop>txtOutputFormatDriver_1</tabstop>
   <tabstop>txtOutputFormatMimetype_1</tabstop>
   <tabstop>txtOutputFormatExtension_1</tabstop>
+  <tabstop>cmbOutputFormatImageMode_1</tabstop>
+  <tabstop>cmbOutputFormatTransparent_1</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_1_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_1_1</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_2_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_2_1</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_3_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_3_1</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_4_1</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_4_1</tabstop>
   <tabstop>txtOutputFormatName_2</tabstop>
   <tabstop>txtOutputFormatDriver_2</tabstop>
   <tabstop>txtOutputFormatMimetype_2</tabstop>
   <tabstop>txtOutputFormatExtension_2</tabstop>
+  <tabstop>cmbOutputFormatImageMode_2</tabstop>
+  <tabstop>cmbOutputFormatTransparent_2</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_1_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_1_2</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_2_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_2_2</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_3_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_3_2</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_4_2</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_4_2</tabstop>
   <tabstop>txtOutputFormatName_3</tabstop>
   <tabstop>txtOutputFormatDriver_3</tabstop>
   <tabstop>txtOutputFormatMimetype_3</tabstop>
   <tabstop>txtOutputFormatExtension_3</tabstop>
+  <tabstop>cmbOutputFormatImageMode_3</tabstop>
+  <tabstop>cmbOutputFormatTransparent_3</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_1_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_1_3</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_2_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_2_3</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_3_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_3_3</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_4_3</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_4_3</tabstop>
   <tabstop>txtOutputFormatName_4</tabstop>
   <tabstop>txtOutputFormatDriver_4</tabstop>
   <tabstop>txtOutputFormatMimetype_4</tabstop>
   <tabstop>txtOutputFormatExtension_4</tabstop>
+  <tabstop>cmbOutputFormatImageMode_4</tabstop>
+  <tabstop>cmbOutputFormatTransparent_4</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_1_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_1_4</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_2_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_2_4</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_3_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_3_4</tabstop>
   <tabstop>txtOutputFormatFormatOptionKey_4_4</tabstop>
+  <tabstop>txtOutputFormatFormatOptionValue_4_4</tabstop>
+  <tabstop>checkBoxLayer_1</tabstop>
+  <tabstop>txtLabelsLayerLabelitem_1</tabstop>
+  <tabstop>cmbLabelsLayerAntialias_1</tabstop>
+  <tabstop>txtLabelsLayerBuffer_1</tabstop>
+  <tabstop>txtLabelsLayerColor_1</tabstop>
+  <tabstop>txtLabelsLayerMindistance_1</tabstop>
+  <tabstop>txtLabelsLayerFont_1</tabstop>
+  <tabstop>cmbLabelsLayerType_1</tabstop>
+  <tabstop>txtLabelsLayerMaxlength_1</tabstop>
+  <tabstop>txtLabelsLayerSize_1</tabstop>
+  <tabstop>cmbLabelsLayerPosition_1</tabstop>
+  <tabstop>cmbLabelsLayerPartials_1</tabstop>
+  <tabstop>txtLabelsLayerOffset_1</tabstop>
+  <tabstop>txtLabelsLayerShadowsize_1</tabstop>
+  <tabstop>cmbLabelsLayerStyleGeoTransform_1</tabstop>
+  <tabstop>txtLabelsLayerStyleColor_1</tabstop>
+  <tabstop>txtLabelsLayerStyleOffset_1</tabstop>
   <tabstop>checkBoxLayer_2</tabstop>
+  <tabstop>txtLabelsLayerLabelitem_2</tabstop>
+  <tabstop>cmbLabelsLayerAntialias_2</tabstop>
+  <tabstop>txtLabelsLayerBuffer_2</tabstop>
   <tabstop>txtLabelsLayerColor_2</tabstop>
   <tabstop>txtLabelsLayerMindistance_2</tabstop>
   <tabstop>txtLabelsLayerFont_2</tabstop>
+  <tabstop>cmbLabelsLayerType_2</tabstop>
+  <tabstop>txtLabelsLayerMaxlength_2</tabstop>
+  <tabstop>txtLabelsLayerSize_2</tabstop>
+  <tabstop>cmbLabelsLayerPosition_2</tabstop>
+  <tabstop>cmbLabelsLayerPartials_2</tabstop>
+  <tabstop>txtLabelsLayerOffset_2</tabstop>
+  <tabstop>txtLabelsLayerShadowsize_2</tabstop>
+  <tabstop>cmbLabelsLayerStyleGeoTransform_2</tabstop>
+  <tabstop>txtLabelsLayerStyleColor_2</tabstop>
+  <tabstop>txtLabelsLayerStyleOffset_2</tabstop>
+  <tabstop>checkBoxLayer_3</tabstop>
+  <tabstop>txtLabelsLayerLabelitem_3</tabstop>
+  <tabstop>cmbLabelsLayerAntialias_3</tabstop>
+  <tabstop>txtLabelsLayerBuffer_3</tabstop>
+  <tabstop>txtLabelsLayerColor_3</tabstop>
+  <tabstop>txtLabelsLayerMindistance_3</tabstop>
+  <tabstop>txtLabelsLayerFont_3</tabstop>
+  <tabstop>cmbLabelsLayerType_3</tabstop>
+  <tabstop>txtLabelsLayerMaxlength_3</tabstop>
+  <tabstop>txtLabelsLayerSize_3</tabstop>
+  <tabstop>cmbLabelsLayerPosition_3</tabstop>
+  <tabstop>cmbLabelsLayerPartials_3</tabstop>
+  <tabstop>txtLabelsLayerOffset_3</tabstop>
+  <tabstop>txtLabelsLayerShadowsize_3</tabstop>
+  <tabstop>cmbLabelsLayerStyleGeoTransform_3</tabstop>
+  <tabstop>txtLabelsLayerStyleColor_3</tabstop>
+  <tabstop>txtLabelsLayerStyleOffset_3</tabstop>
+  <tabstop>checkBoxLayer_4</tabstop>
+  <tabstop>txtLabelsLayerLabelitem_4</tabstop>
+  <tabstop>cmbLabelsLayerAntialias_4</tabstop>
+  <tabstop>txtLabelsLayerBuffer_4</tabstop>
+  <tabstop>txtLabelsLayerColor_4</tabstop>
+  <tabstop>txtLabelsLayerMindistance_4</tabstop>
+  <tabstop>txtLabelsLayerFont_4</tabstop>
+  <tabstop>cmbLabelsLayerType_4</tabstop>
+  <tabstop>txtLabelsLayerMaxlength_4</tabstop>
+  <tabstop>txtLabelsLayerSize_4</tabstop>
+  <tabstop>cmbLabelsLayerPosition_4</tabstop>
+  <tabstop>cmbLabelsLayerPartials_4</tabstop>
+  <tabstop>txtLabelsLayerOffset_4</tabstop>
+  <tabstop>txtLabelsLayerShadowsize_4</tabstop>
+  <tabstop>cmbLabelsLayerStyleGeoTransform_4</tabstop>
+  <tabstop>txtLabelsLayerStyleColor_4</tabstop>
+  <tabstop>txtLabelsLayerStyleOffset_4</tabstop>
+  <tabstop>checkBoxOws</tabstop>
+  <tabstop>txtMetadataOwsOwsEnableRequest</tabstop>
+  <tabstop>txtMetadataOwsGmlFeatureid</tabstop>
+  <tabstop>txtMetadataOwsOwsTitle</tabstop>
+  <tabstop>txtMetadataOwsOwsSrs</tabstop>
+  <tabstop>txtMetadataOwsOwsOnlineResource</tabstop>
+  <tabstop>txtMetadataOwsOwsGetFeatureFormatList</tabstop>
+  <tabstop>txtMetadataOwsGmlIncludeItems</tabstop>
+  <tabstop>txtMetadataOwsWebOwsAllowedIpList</tabstop>
+  <tabstop>txtMetadataOwsWebOwsDeniedIpList</tabstop>
+  <tabstop>txtMetadataOwsWebOwsSchemasLocation</tabstop>
+  <tabstop>txtMetadataOwsWebOwsUpdatesequence</tabstop>
+  <tabstop>txtMetadataOwsWebOwsHttpMaxAge</tabstop>
+  <tabstop>txtMetadataOwsWebOwsSldEnabled</tabstop>
+  <tabstop>checkBoxWms</tabstop>
   <tabstop>txtMetadataWmsWebWmsEnableRequest</tabstop>
   <tabstop>txtMetadataWmsWebWmsTitle</tabstop>
   <tabstop>txtMetadataWmsWebWmsOnlineresource</tabstop>
@@ -3535,6 +3638,7 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
   <tabstop>txtMetadataWmsWebWmsRootlayerAbstract</tabstop>
   <tabstop>txtMetadataWmsWebWmsRootlayerTitle</tabstop>
   <tabstop>txtMetadataWmsWebWmsTimeformat</tabstop>
+  <tabstop>checkBoxWfs</tabstop>
   <tabstop>txtMetadataWfsWebWfsEnableRequest</tabstop>
   <tabstop>txtMetadataWfsWebWfsTitle</tabstop>
   <tabstop>txtMetadataWfsWebWfsOnlineresource</tabstop>
@@ -3551,6 +3655,7 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
   <tabstop>txtMetadataWfsWebWfsMaxfeatures</tabstop>
   <tabstop>txtMetadataWfsWebWfsServiceOnlineresource</tabstop>
   <tabstop>txtMetadataWfsWebWfsNamespaceUri</tabstop>
+  <tabstop>checkBoxWcs</tabstop>
   <tabstop>txtMetadataWcsWebWcsEnableRequest</tabstop>
   <tabstop>txtMetadataWcsWebWcsLabel</tabstop>
   <tabstop>txtMetadataWcsWebWcsAbstract</tabstop>
@@ -3563,29 +3668,37 @@ http://my.host.com/cgi-bin/mapserv.exe</string>
   <tabstop>txtMetadataWcsWebWcsMetadatalinkType</tabstop>
   <tabstop>txtMetadataWcsWebWcsName</tabstop>
   <tabstop>txtMetadataWcsWebWcsServiceOnlineresource</tabstop>
+  <tabstop>checkTmplFromFile</tabstop>
   <tabstop>txtTemplatePath</tabstop>
+  <tabstop>checkGenerateTmpl</tabstop>
   <tabstop>templateTable</tabstop>
   <tabstop>txtTmplHeaderPath</tabstop>
+  <tabstop>btnChooseTmplHeader</tabstop>
   <tabstop>txtTmplFooterPath</tabstop>
+  <tabstop>btnChooseTmplFooter</tabstop>
   <tabstop>txtMapFontsetPath</tabstop>
   <tabstop>checkCreateFontFile</tabstop>
   <tabstop>checkBoxForce</tabstop>
   <tabstop>checkBoxPartials</tabstop>
-  <tabstop>tabWidget_2</tabstop>
   <tabstop>scrollArea</tabstop>
-  <tabstop>btnChooseTemplate</tabstop>
+  <tabstop>scrollArea</tabstop>
   <tabstop>tabWiget</tabstop>
-  <tabstop>btnChooseTmplHeader</tabstop>
-  <tabstop>checkTmplFromFile</tabstop>
-  <tabstop>checkGenerateTmpl</tabstop>
   <tabstop>scrollArea</tabstop>
-  <tabstop>btnChooseTmplFooter</tabstop>
   <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>tabWidget_2</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>toolButtonImportMapFile</tabstop>
-  <tabstop>scrollArea</tabstop>
+  <tabstop>btnChooseTemplate</tabstop>
   <tabstop>btnChooseFile</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>tabWidget_2</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea</tabstop>
   <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources/>
