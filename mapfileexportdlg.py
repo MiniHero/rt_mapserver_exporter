@@ -34,6 +34,7 @@ from mapscript import MS_IMAGEMODE_RGB
 from osgeo._ogr import Layer_Intersection
 from decimal import Decimal
 from owslib.csw import outputformat
+import SerializationUtils as utils
 
 _toUtf8 = lambda s: unicode(s).encode('utf8')
 
@@ -103,6 +104,8 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         "PC256" : mapscript.MS_IMAGEMODE_PC256,
         "FLOAT32" : mapscript.MS_IMAGEMODE_FLOAT32
     }
+    
+    
     
 #     map1 = [1,2,3]
 #     layers_map = [self.groupBoxLabelsLayer_1, self.groupBoxLabelsLayer_2, self.groupBoxLabelsLayer_3, self.groupBoxLabelsLayer_4]
@@ -199,26 +202,6 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         self.cmbOutputFormatTransparent_2.addItems(["", "TRUE", "FALSE"])
         self.cmbOutputFormatTransparent_3.addItems(["", "TRUE", "FALSE"])
         self.cmbOutputFormatTransparent_4.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerAntialias_1.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerAntialias_2.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerAntialias_3.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerAntialias_4.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerType_1.addItems(["", "BITMAP", "TRUETYPE"])
-        self.cmbLabelsLayerType_2.addItems(["", "BITMAP", "TRUETYPE"])
-        self.cmbLabelsLayerType_3.addItems(["", "BITMAP", "TRUETYPE"])
-        self.cmbLabelsLayerType_4.addItems(["", "BITMAP", "TRUETYPE"])
-        self.cmbLabelsLayerPosition_1.addItems(["", "AUTO", "UL", "UC", "UR", "CL", "CC", "CR", "LL", "LC", "LR"])
-        self.cmbLabelsLayerPosition_2.addItems(["", "AUTO", "UL", "UC", "UR", "CL", "CC", "CR", "LL", "LC", "LR"])
-        self.cmbLabelsLayerPosition_3.addItems(["", "AUTO", "UL", "UC", "UR", "CL", "CC", "CR", "LL", "LC", "LR"])
-        self.cmbLabelsLayerPosition_4.addItems(["", "AUTO", "UL", "UC", "UR", "CL", "CC", "CR", "LL", "LC", "LR"])
-        self.cmbLabelsLayerPartials_1.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerPartials_2.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerPartials_3.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerPartials_4.addItems(["", "TRUE", "FALSE"])
-        self.cmbLabelsLayerStyleGeoTransform_1.addItems(["", "labelpnt", "labelpoly"])
-        self.cmbLabelsLayerStyleGeoTransform_2.addItems(["", "labelpnt", "labelpoly"])
-        self.cmbLabelsLayerStyleGeoTransform_3.addItems(["", "labelpnt", "labelpoly"])
-        self.cmbLabelsLayerStyleGeoTransform_4.addItems(["", "labelpnt", "labelpoly"])
 
         QObject.connect( self.btnChooseFile, SIGNAL("clicked()"), self.selectMapFile )
         QObject.connect( self.toolButtonImportMapFile, SIGNAL("clicked()"), self.importFromMapfile )
@@ -234,15 +217,6 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         self.checkBoxWms.stateChanged.connect(self.toggleWmsMetadata)
         self.checkBoxWfs.stateChanged.connect(self.toggleWfsMetadata)
         self.checkBoxWcs.stateChanged.connect(self.toggleWcsMetadata)
-        
-        self.groupBoxLabelsLayer_1.setEnabled(False)
-        self.groupBoxLabelsLayer_2.setEnabled(False)
-        self.groupBoxLabelsLayer_3.setEnabled(False)
-        self.groupBoxLabelsLayer_4.setEnabled(False)
-        self.checkBoxLayer_1.stateChanged.connect(self.toggleLayer1)
-        self.checkBoxLayer_2.stateChanged.connect(self.toggleLayer2)
-        self.checkBoxLayer_3.stateChanged.connect(self.toggleLayer3)
-        self.checkBoxLayer_4.stateChanged.connect(self.toggleLayer4)
         
 
     def toggleOwsMetadata(self):
@@ -476,7 +450,6 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         settings.setValue("/rt_mapserver_exporter/lastUsedTmpl", filename)
         # update the path
         lineedit.setText( filename )
-
 
     def accept(self):
         # check user inputs
@@ -975,223 +948,98 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
                 ms_layer.opacity = opacity
 
             else:
-                if layer_index == 1:
-                    if self.txtLabelsLayerLabelitem_1.text() != "":
-                        ms_layer.labelitem = self.txtLabelsLayerLabelitem_1.text()
-    
-                    ms_label = mapscript.labelObj()
-    
-                    if self.cmbLabelsLayerAntialias_1.currentText() != "":
-                        ms_label.antialias = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerAntialias_1.currentText()))
-                    if self.cmbLabelsLayerType_1.currentText() != "":
-                        ms_label.type = self.labelTypeMap.get(_toUtf8(self.cmbLabelsLayerType_1.currentText()))
-                    if self.cmbLabelsLayerPosition_1.currentText() != "":
-                        ms_label.position = self.labelPositionMap.get(_toUtf8(self.cmbLabelsLayerPosition_1.currentText()))
-                    if self.cmbLabelsLayerPartials_1.currentText() != "":
-                        ms_label.partials = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerPartials_1.currentText()))
-                    if self.txtLabelsLayerColor_1.text() != "":
-                        color = [int(n) for n in self.txtLabelsLayerColor_1.text().split()]
-                        ms_label.color.setRGB( color[0], color[1], color[2] )
-                    if self.txtLabelsLayerOffset_1.text() != "":
-                        offset = [int(n) for n in self.txtLabelsLayerOffset_1.text().split()]
-                        ms_label.offsetx = offset[0]
-                        ms_label.offsety = offset[1]
-                    if self.txtLabelsLayerShadowsize_1.text() != "":
-                        shadowsize = [int(n) for n in self.txtLabelsLayerShadowsize_1.text().split()]
-                        ms_label.shadowsizex = shadowsize[0]
-                        ms_label.shadowsizey = shadowsize[1]
-                    if self.txtLabelsLayerBuffer_1.text() != "":
-                        ms_label.buffer = int(self.txtLabelsLayerBuffer_1.text())
-                    if self.txtLabelsLayerMindistance_1.text() != "":
-                        ms_label.mindistance = int(self.txtLabelsLayerMindistance_1.text())
-                    if self.txtLabelsLayerMaxlength_1.text() != "":
-                        ms_label.maxlength = int(self.txtLabelsLayerMaxlength_1.text())
-                    if self.txtLabelsLayerSize_1.text() != "":
-                        ms_label.size = float(self.txtLabelsLayerSize_1.text())
-                    if self.txtLabelsLayerFont_1.text() != "":
-                        ms_label.font = self.txtLabelsLayerFont_1.text()
-                        
-                    ms_style = mapscript.styleObj()
-                    
-                    if self.cmbLabelsLayerStyleGeoTransform_1.currentText() != "":
-                        ms_style.setGeomTransform(_toUtf8(self.cmbLabelsLayerStyleGeoTransform_1.currentText()))
-                    if self.txtLabelsLayerStyleColor_1.text() != "":
-                        style_color = [int(n) for n in self.txtLabelsLayerStyleColor_1.text().split()]
-                        ms_style.color = mapscript.colorObj()
-                        ms_style.color.setRGB(style_color[0], style_color[1], style_color[2])
-                    if self.txtLabelsLayerStyleOffset_1.text() != "":
-                        style_offset = [int(n) for n in self.txtLabelsLayerStyleOffset_1.text().split()]
-                        ms_style.offsetx = offset[0]
-                        ms_style.offsety = offset[1]
-                        
-                    ms_label.insertStyle(ms_style)
-                    ms_class = mapscript.classObj()
-                    ms_class.addLabel( ms_label )
-                    ms_layer.insertClass( ms_class )
-                    
-                if layer_index == 2:
-                    if self.txtLabelsLayerLabelitem_2.text() != "":
-                        ms_layer.labelitem = self.txtLabelsLayerLabelitem_2.text()
-    
-                    ms_label = mapscript.labelObj()
-    
-                    if self.cmbLabelsLayerAntialias_2.currentText() != "":
-                        ms_label.antialias = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerAntialias_2.currentText()))
-                    if self.cmbLabelsLayerType_2.currentText() != "":
-                        ms_label.type = self.labelTypeMap.get(_toUtf8(self.cmbLabelsLayerType_2.currentText()))
-                    if self.cmbLabelsLayerPosition_2.currentText() != "":
-                        ms_label.position = self.labelPositionMap.get(_toUtf8(self.cmbLabelsLayerPosition_2.currentText()))
-                    if self.cmbLabelsLayerPartials_2.currentText() != "":
-                        ms_label.partials = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerPartials_2.currentText()))
-                    if self.txtLabelsLayerColor_2.text() != "":
-                        color = [int(n) for n in self.txtLabelsLayerColor_2.text().split()]
-                        ms_label.color.setRGB( color[0], color[1], color[2] )
-                    if self.txtLabelsLayerOffset_2.text() != "":
-                        offset = [int(n) for n in self.txtLabelsLayerOffset_2.text().split()]
-                        ms_label.offsetx = offset[0]
-                        ms_label.offsety = offset[1]
-                    if self.txtLabelsLayerShadowsize_2.text() != "":
-                        shadowsize = [int(n) for n in self.txtLabelsLayerShadowsize_2.text().split()]
-                        ms_label.shadowsizex = shadowsize[0]
-                        ms_label.shadowsizey = shadowsize[1]
-                    if self.txtLabelsLayerBuffer_2.text() != "":
-                        ms_label.buffer = int(self.txtLabelsLayerBuffer_2.text())
-                    if self.txtLabelsLayerMindistance_2.text() != "":
-                        ms_label.mindistance = int(self.txtLabelsLayerMindistance_2.text())
-                    if self.txtLabelsLayerMaxlength_2.text() != "":
-                        ms_label.maxlength = int(self.txtLabelsLayerMaxlength_2.text())
-                    if self.txtLabelsLayerSize_2.text() != "":
-                        ms_label.size = float(self.txtLabelsLayerSize_2.text())
-                    if self.txtLabelsLayerFont_2.text() != "":
-                        ms_label.font = self.txtLabelsLayerFont_2.text()
-                        
-                    ms_style = mapscript.styleObj()
-                    
-                    if self.cmbLabelsLayerStyleGeoTransform_2.currentText() != "":
-                        ms_style.setGeomTransform(_toUtf8(self.cmbLabelsLayerStyleGeoTransform_2.currentText()))
-                    if self.txtLabelsLayerStyleColor_2.text() != "":
-                        style_color = [int(n) for n in self.txtLabelsLayerStyleColor_2.text().split()]
-                        ms_style.color = mapscript.colorObj()
-                        ms_style.color.setRGB(style_color[0], style_color[1], style_color[2])
-                    if self.txtLabelsLayerStyleOffset_2.text() != "":
-                        style_offset = [int(n) for n in self.txtLabelsLayerStyleOffset_2.text().split()]
-                        ms_style.offsetx = offset[0]
-                        ms_style.offsety = offset[1]
-                        
-                    ms_label.insertStyle(ms_style)
-                    ms_class = mapscript.classObj()
-                    ms_class.addLabel( ms_label )
-                    ms_layer.insertClass( ms_class )
-                    
-                if layer_index == 3:
-                    if self.txtLabelsLayerLabelitem_3.text() != "":
-                        ms_layer.labelitem = self.txtLabelsLayerLabelitem_3.text()
-    
-                    ms_label = mapscript.labelObj()
-    
-                    if self.cmbLabelsLayerAntialias_3.currentText() != "":
-                        ms_label.antialias = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerAntialias_3.currentText()))
-                    if self.cmbLabelsLayerType_3.currentText() != "":
-                        ms_label.type = self.labelTypeMap.get(_toUtf8(self.cmbLabelsLayerType_3.currentText()))
-                    if self.cmbLabelsLayerPosition_3.currentText() != "":
-                        ms_label.position = self.labelPositionMap.get(_toUtf8(self.cmbLabelsLayerPosition_3.currentText()))
-                    if self.cmbLabelsLayerPartials_3.currentText() != "":
-                        ms_label.partials = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerPartials_3.currentText()))
-                    if self.txtLabelsLayerColor_3.text() != "":
-                        color = [int(n) for n in self.txtLabelsLayerColor_3.text().split()]
-                        ms_label.color.setRGB( color[0], color[1], color[2] )
-                    if self.txtLabelsLayerOffset_3.text() != "":
-                        offset = [int(n) for n in self.txtLabelsLayerOffset_3.text().split()]
-                        ms_label.offsetx = offset[0]
-                        ms_label.offsety = offset[1]
-                    if self.txtLabelsLayerShadowsize_3.text() != "":
-                        shadowsize = [int(n) for n in self.txtLabelsLayerShadowsize_3.text().split()]
-                        ms_label.shadowsizex = shadowsize[0]
-                        ms_label.shadowsizey = shadowsize[1]
-                    if self.txtLabelsLayerBuffer_3.text() != "":
-                        ms_label.buffer = int(self.txtLabelsLayerBuffer_3.text())
-                    if self.txtLabelsLayerMindistance_3.text() != "":
-                        ms_label.mindistance = int(self.txtLabelsLayerMindistance_3.text())
-                    if self.txtLabelsLayerMaxlength_3.text() != "":
-                        ms_label.maxlength = int(self.txtLabelsLayerMaxlength_3.text())
-                    if self.txtLabelsLayerSize_3.text() != "":
-                        ms_label.size = float(self.txtLabelsLayerSize_3.text())
-                    if self.txtLabelsLayerFont_3.text() != "":
-                        ms_label.font = self.txtLabelsLayerFont_3.text()
-                        
-                    ms_style = mapscript.styleObj()
-                    
-                    if self.cmbLabelsLayerStyleGeoTransform_3.currentText() != "":
-                        ms_style.setGeomTransform(_toUtf8(self.cmbLabelsLayerStyleGeoTransform_3.currentText()))
-                    if self.txtLabelsLayerStyleColor_3.text() != "":
-                        style_color = [int(n) for n in self.txtLabelsLayerStyleColor_3.text().split()]
-                        ms_style.color = mapscript.colorObj()
-                        ms_style.color.setRGB(style_color[0], style_color[1], style_color[2])
-                    if self.txtLabelsLayerStyleOffset_3.text() != "":
-                        style_offset = [int(n) for n in self.txtLabelsLayerStyleOffset_3.text().split()]
-                        ms_style.offsetx = offset[0]
-                        ms_style.offsety = offset[1]
-                        
-                    ms_label.insertStyle(ms_style)
-                    ms_class = mapscript.classObj()
-                    ms_class.addLabel( ms_label )
-                    ms_layer.insertClass( ms_class )
-                    
-                if layer_index == 4:
-                    if self.txtLabelsLayerLabelitem_4.text() != "":
-                        ms_layer.labelitem = self.txtLabelsLayerLabelitem_4.text()
-    
-                    ms_label = mapscript.labelObj()
-    
-                    if self.cmbLabelsLayerAntialias_4.currentText() != "":
-                        ms_label.antialias = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerAntialias_4.currentText()))
-                    if self.cmbLabelsLayerType_4.currentText() != "":
-                        ms_label.type = self.labelTypeMap.get(_toUtf8(self.cmbLabelsLayerType_4.currentText()))
-                    if self.cmbLabelsLayerPosition_4.currentText() != "":
-                        ms_label.position = self.labelPositionMap.get(_toUtf8(self.cmbLabelsLayerPosition_4.currentText()))
-                    if self.cmbLabelsLayerPartials_4.currentText() != "":
-                        ms_label.partials = self.trueFalseStringMap.get(_toUtf8(self.cmbLabelsLayerPartials_4.currentText()))
-                    if self.txtLabelsLayerColor_4.text() != "":
-                        color = [int(n) for n in self.txtLabelsLayerColor_4.text().split()]
-                        ms_label.color.setRGB( color[0], color[1], color[2] )
-                    if self.txtLabelsLayerOffset_4.text() != "":
-                        offset = [int(n) for n in self.txtLabelsLayerOffset_4.text().split()]
-                        ms_label.offsetx = offset[0]
-                        ms_label.offsety = offset[1]
-                    if self.txtLabelsLayerShadowsize_4.text() != "":
-                        shadowsize = [int(n) for n in self.txtLabelsLayerShadowsize_4.text().split()]
-                        ms_label.shadowsizex = shadowsize[0]
-                        ms_label.shadowsizey = shadowsize[1]
-                    if self.txtLabelsLayerBuffer_4.text() != "":
-                        ms_label.buffer = int(self.txtLabelsLayerBuffer_4.text())
-                    if self.txtLabelsLayerMindistance_4.text() != "":
-                        ms_label.mindistance = int(self.txtLabelsLayerMindistance_4.text())
-                    if self.txtLabelsLayerMaxlength_4.text() != "":
-                        ms_label.maxlength = int(self.txtLabelsLayerMaxlength_4.text())
-                    if self.txtLabelsLayerSize_4.text() != "":
-                        ms_label.size = float(self.txtLabelsLayerSize_4.text())
-                    if self.txtLabelsLayerFont_4.text() != "":
-                        ms_label.font = self.txtLabelsLayerFont_4.text()
-                        
-                    ms_style = mapscript.styleObj()
-                    
-                    if self.cmbLabelsLayerStyleGeoTransform_4.currentText() != "":
-                        ms_style.setGeomTransform(_toUtf8(self.cmbLabelsLayerStyleGeoTransform_4.currentText()))
-                    if self.txtLabelsLayerStyleColor_4.text() != "":
-                        style_color = [int(n) for n in self.txtLabelsLayerStyleColor_4.text().split()]
-                        ms_style.color = mapscript.colorObj()
-                        ms_style.color.setRGB(style_color[0], style_color[1], style_color[2])
-                    if self.txtLabelsLayerStyleOffset_4.text() != "":
-                        style_offset = [int(n) for n in self.txtLabelsLayerStyleOffset_4.text().split()]
-                        ms_style.offsetx = offset[0]
-                        ms_style.offsety = offset[1]
-                        
-                    ms_label.insertStyle(ms_style)
-                    ms_class = mapscript.classObj()
-                    ms_class.addLabel( ms_label )
-                    ms_layer.insertClass( ms_class )
+                
+                labelingEngine = QgsPalLabeling()
+                labelingEngine.loadEngineSettings()
 
-        layer_index = 0
+                if labelingEngine and labelingEngine.willUseLayer(layer):
+                    ps = QgsPalLayerSettings.fromLayer(layer)
+                    
+                    if not ps.isExpression:
+                        ms_layer.labelitem = unicode(ps.fieldName).encode('utf-8')
+                    else:
+                        pass
+    
+                    msLabel = mapscript.labelObj()
+        
+                    msLabel.type = mapscript.MS_TRUETYPE
+                    msLabel.encoding = 'utf-8'
+                    
+                    # Position, rotation and scaling
+                    msLabel.position = utils.serializeLabelPosition(ps)
+                    msLabel.offsetx = int(ps.xOffset)
+                    msLabel.offsety = int(ps.yOffset)
+        
+                    # Data defined rotation
+                    # Please note that this is the only currently supported data defined property.
+                    if QgsPalLayerSettings.Rotation in ps.dataDefinedProperties.keys():
+                        dd = ps.dataDefinedProperty(QgsPalLayerSettings.Rotation)
+                        rotField = unicode(dd.field()).encode('utf-8')
+                        msLabel.setBinding(mapscript.MS_LABEL_BINDING_ANGLE, rotField)
+                    else:
+                        msLabel.angle = ps.angleOffset
+        
+                    if ps.scaleMin > 0:
+                        ms_layer.labelminscaledenom = ps.scaleMin
+                    if ps.scaleMax > 0:
+                        ms_layer.labelmaxscaledenom = ps.scaleMax
+        
+                    fontDef, msLabel.size = utils.serializeFontDefinition(ps.textFont, ps.textNamedStyle)
+        
+                    # `emitFontDefinitions` gets set based on whether a fontset path is supplied through 
+                    # the plugin UI. There is no point in emitting font definitions without a valid fontset,
+                    # so in that case we fall back to using whatever default font MapServer (thus the
+                    # underlying windowing system) provides.
+                    # Please note that substituting the default font only works in MapServer 7.0.0 and above.
+    #                 if emitFontDefinitions == True:
+                    msLabel.font = fontDef
+        
+                    if ps.fontSizeInMapUnits:
+                        utils.maybeSetLayerSizeUnitFromMap(QgsSymbolV2.MapUnit, ms_layer)
+        
+                    # Font size and color
+                    msLabel.color = utils.serializeColor(ps.textColor)
+        
+                    if ps.fontLimitPixelSize:
+                        msLabel.minsize = ps.fontMinPixelSize
+                        msLabel.maxsize = ps.fontMaxPixelSize
+        
+                    # Other properties
+                    wrap = unicode(ps.wrapChar).encode('utf-8')
+                    if len(wrap) == 1:
+                        msLabel.wrap = wrap[0]
+                    elif len(wrap) > 1:
+                        QgsMessageLog.logMessage(
+                            u'Skipping invalid wrap character ("%s") for labels.' % wrap.decode('utf-8'),
+                            'RT MapServer Exporter'
+                        )
+                    else:
+                        # No wrap char set
+                        pass
+        
+                    # Other properties
+                    msLabel.partials = labelingEngine.isShowingPartialsLabels()
+                    msLabel.force = ps.displayAll
+                    msLabel.priority = ps.priority
+                    msLabel.buffer = int(utils.sizeUnitToPx(
+                        ps.bufferSize,
+                        QgsSymbolV2.MapUnit if ps.bufferSizeInMapUnits else QgsSymbolV2.MM
+                    ))
+        
+                    if ps.minFeatureSize > 0:
+                        msLabel.minfeaturesize = utils.sizeUnitToPx(ps.minFeatureSize)
+        
+                    # Label definitions gets appended to the very first class on a layer, or to a new class
+                    # if no classes exist.
+                    #
+                  
+                    if ms_layer.numclasses > 0:
+                        for c in range(0, ms_layer.numclasses):
+                            ms_layer.getClass(c).addLabel(msLabel)
+                    else:
+                        mapscript.classObj(ms_layer).addLabel(msLabel)
+                    
+                
 
         # save the map file now!
         if mapscript.MS_SUCCESS != ms_map.save( _toUtf8( self.txtMapFilePath.text() )     ):
