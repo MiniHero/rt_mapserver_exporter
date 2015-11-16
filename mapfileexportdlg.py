@@ -95,14 +95,25 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
     }
     
     outputFormatOptionMap = {
-        "RBG" : mapscript.MS_IMAGEMODE_RGB,
-        "RBGA" : mapscript.MS_IMAGEMODE_RGBA,
+        "RGB" : mapscript.MS_IMAGEMODE_RGB,
+        "RGBA" : mapscript.MS_IMAGEMODE_RGBA,
         "BYTE" : mapscript.MS_IMAGEMODE_BYTE,
         "FEATURE" : mapscript.MS_IMAGEMODE_FEATURE,
         "INT16" : mapscript.MS_IMAGEMODE_INT16,
         "NULL" : mapscript.MS_IMAGEMODE_NULL,
         "PC256" : mapscript.MS_IMAGEMODE_PC256,
         "FLOAT32" : mapscript.MS_IMAGEMODE_FLOAT32
+    }
+    
+    outputFormatImageModeIndexMap = {
+        "RGB" : 0,
+        "RGBA" : 1,
+        "BYTE" : 2,
+        "FEATURE" : 3,
+        "INT16" : 4,
+        "NULL" : 5,
+        "PC256" : 6,
+        "FLOAT32" : 7
     }
     
     PROJ_LIB = "PROJ_LIB"
@@ -174,14 +185,18 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         # fill the image format combo
         self.cmbGeneralMapImageType.addItems( ["png", "gif", "jpeg", "svg", "GTiff"] )
         
-        self.cmbOutputFormatImageMode_1.addItems(["", "RBG", "RBGA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
-        self.cmbOutputFormatImageMode_2.addItems(["", "RBG", "RBGA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
-        self.cmbOutputFormatImageMode_3.addItems(["", "RBG", "RBGA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
-        self.cmbOutputFormatImageMode_4.addItems(["", "RBG", "RBGA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
+        self.cmbOutputFormatImageMode_1.addItems(["", "RGB", "RGBA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
+        self.cmbOutputFormatImageMode_2.addItems(["", "RGB", "RGBA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
+        self.cmbOutputFormatImageMode_3.addItems(["", "RGB", "RGBA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
+        self.cmbOutputFormatImageMode_4.addItems(["", "RGB", "RGBA", "BYTE", "FEATURE", "INT16", "NULL", "PC256", "FLOAT32"])
         self.cmbOutputFormatTransparent_1.addItems(["", "TRUE", "FALSE"])
         self.cmbOutputFormatTransparent_2.addItems(["", "TRUE", "FALSE"])
         self.cmbOutputFormatTransparent_3.addItems(["", "TRUE", "FALSE"])
         self.cmbOutputFormatTransparent_4.addItems(["", "TRUE", "FALSE"])
+        
+        self.cmbOutputFormatImageMode_1.setCurrentIndex(1)
+        self.cmbOutputFormatImageMode_2.setCurrentIndex(1)
+        self.cmbOutputFormatTransparent_1.setCurrentIndex(2)
 
         QObject.connect( self.btnChooseFile, SIGNAL("clicked()"), self.selectMapFile )
         QObject.connect( self.toolButtonImportMapFile, SIGNAL("clicked()"), self.importFromMapfile )
@@ -307,6 +322,7 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
         self.txtOutputFormatTransparent_1.setText(ms_map.outputformat.transparent)
         self.txtOutputFormatFormatOption_1_1.setText(ms_map.outputformat.formatoptions)
 #         self.txtOutputFormatName_1.setText(ms_map.outputformat.name)
+    
         
         self.txtMetadataOwsOwsEnableRequest.setText(ms_map.web.metadata.get("ows_enable_request"))
         self.txtMetadataOwsOwsTitle.setText(ms_map.web.metadata.get("ows_title"))
@@ -1004,10 +1020,26 @@ class MapfileExportDlg(QDialog, Ui_MapfileExportDlg):
             
                         if ps.minFeatureSize > 0:
                             msLabel.minfeaturesize = utils.sizeUnitToPx(ps.minFeatureSize)
+                            
+                        ms_style = mapscript.styleObj()
+                    
+                        ms_style.color = mapscript.colorObj()
+                        
+                        ms_style.color.setRGB(ps.shapeFillColor.red(), ps.shapeFillColor.green(), ps.shapeFillColor.blue())
+                        
+                        ms_style.offsetx = float(ps.shapeOffset.x())
+                        ms_style.offsety = float(ps.shapeOffset.y())
+                        
+                        if(ps.shapeSizeType == 0):
+                            ms_style.setGeomTransform('labelpoly')
+                        else:
+#                         if(ps.shapeSizeType == SizeFixed):
+                            ms_style.setGeomTransform('labelpnt')
             
                         # Label definitions gets appended to the very first class on a layer, or to a new class
                         # if no classes exist.
                         #
+                        msLabel.insertStyle(ms_style)
                       
                         if ms_layer.numclasses > 0:
                             for c in range(0, ms_layer.numclasses):
